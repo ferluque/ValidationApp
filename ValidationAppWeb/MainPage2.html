@@ -21,13 +21,14 @@
                 setOption1.push(document.getElementById("option"+i.toString()+"1"));
                 setComboBox2.push(document.getElementById("combo"+i.toString()+"2"));
                 setOption2.push(document.getElementById("option"+i.toString()+"2"));
-                setComboBox3.push(document.getElementById("combo"+i.toString()+"3"));
-                setOption3.push(document.getElementById("option"+i.toString()+"3"));
                 last1.push('');
                 last2.push('');
             }
 
             contenedorImagen = document.getElementById("contenedorImagen");
+
+            // Cargar Archivo human_validation
+
 
             // Cargar imagen
             const imagen = new Image();
@@ -50,7 +51,7 @@
 
             // Cargar Categorías
             var rawFile = new XMLHttpRequest();
-            rawFile.open("GET", 'resources/CESLabelsTreeDict.json', false);
+            rawFile.open("GET", 'resources/categories.json', false);
             rawFile.onreadystatechange = function () {
                 if (rawFile.readyState === 4) {
                     if (rawFile.status === 200 || rawFile.status == 0) {
@@ -76,11 +77,10 @@
             for (let i=0; i<4; i++) {
                 var selection = setOption1[i].value;
                 if (selection!='') {
-                    var thirdLevel = Object.keys(DB[selection]);
+                    var thirdLevel = DB[selection];
                     setComboBox2[i].innerHTML = '';
                     if (last1[i] != selection) {
                         setOption2[i].value = '';
-                        setOption3[i].value = '';
                     }
                     last1[i] = selection;
                     if (thirdLevel != undefined) {
@@ -89,21 +89,6 @@
                             opt.value = thirdLevel[j];
                             opt.innerHTML = thirdLevel[j];
                             setComboBox2[i].appendChild(opt);
-                        }
-                    }
-                    selection2 = setOption2[i].value;
-                    if (last2[i] != selection2) {
-                        setOption3[i].value = '';
-                    }
-                    last2[i] = selection2;
-                    var fourthLevel = DB[selection][selection2];
-                    setComboBox3[i].innerHTML = '';
-                    if (fourthLevel != undefined) {
-                        for (let j = 0; j < fourthLevel.length; j++) {
-                            var opt = document.createElement('option');
-                            opt.innerHTML = fourthLevel[j];
-                            opt.value = fourthLevel[j];
-                            setComboBox3[i].appendChild(opt);
                         }
                     }
                 }
@@ -256,38 +241,28 @@
             <td>
                 <div class="container" id="contenedorCombobox1">
                     <div class="comboboxContainer">
-                        <p style="font-family: Verdana">2nd Level</p>
+                        <p style="font-family: Verdana">1st Level</p>
                         <input type="text" id="option11" list="combo11" class="combobox">
                         <datalist id="combo11" class="combobox"/>
                     </div>
                     <div class="comboboxContainer">
-                        <p style="font-family: Verdana">3rd Level</p>
+                        <p style="font-family: Verdana">2nd Level</p>
                         <input type="text" id="option12" list="combo12" class="combobox">
                         <datalist id="combo12" class="combobox"/>
-                    </div>
-                    <div class="comboboxContainer">
-                        <p style="font-family: Verdana">4th Level</p>
-                        <input type="text" id="option13" list="combo13" class="combobox">
-                        <datalist id="combo13" class="combobox"/>
                     </div>
                 </div>
             </td>
             <td>
                 <div class="container" id="contenedorCombobox2">
                     <div class="comboboxContainer">
-                        <p style="font-family: Verdana">2nd Level</p>
+                        <p style="font-family: Verdana">1st Level</p>
                         <input type="text" id="option21" list="combo21" class="combobox">
                         <datalist id="combo21" class="combobox"/>
                     </div>
                     <div class="comboboxContainer">
-                        <p style="font-family: Verdana">3rd Level</p>
+                        <p style="font-family: Verdana">2nd Level</p>
                         <input type="text" id="option22" list="combo22" class="combobox">
                         <datalist id="combo22" class="combobox"/>
-                    </div>
-                    <div class="comboboxContainer">
-                        <p style="font-family: Verdana">4th Level</p>
-                        <input type="text" id="option23" list="combo23" class="combobox">
-                        <datalist id="combo23" class="combobox"/>
                     </div>
                 </div>
             </td>
@@ -308,38 +283,28 @@
             <td>
                 <div class="container" id="contenedorCombobox3">
                     <div class="comboboxContainer">
-                        <p style="font-family: Verdana">2nd Level</p>
+                        <p style="font-family: Verdana">1st Level</p>
                         <input type="text" id="option31" list="combo31" class="combobox">
                         <datalist id="combo31" class="combobox"/>
                     </div>
                     <div class="comboboxContainer">
-                        <p style="font-family: Verdana">3rd Level</p>
+                        <p style="font-family: Verdana">2nd Level</p>
                         <input type="text" id="option32" list="combo32" class="combobox">
                         <datalist id="combo32" class="combobox"/>
-                    </div>
-                    <div class="comboboxContainer">
-                        <p style="font-family: Verdana">4th Level</p>
-                        <input type="text" id="option33" list="combo33" class="combobox">
-                        <datalist id="combo33" class="combobox"/>
                     </div>
                 </div>
             </td>
             <td>
                 <div class="container" id="contenedorCombobox4">
                     <div class="comboboxContainer">
-                        <p style="font-family: Verdana">2nd Level</p>
+                        <p style="font-family: Verdana">1st Level</p>
                         <input type="text" id="option41" list="combo41" class="combobox">
                         <datalist id="combo41" class="combobox"/>
                     </div>
                     <div class="comboboxContainer">
-                        <p style="font-family: Verdana">3rd Level</p>
+                        <p style="font-family: Verdana">2nd Level</p>
                         <input type="text" id="option42" list="combo42" class="combobox">
                         <datalist id="combo42" class="combobox"/>
-                    </div>
-                    <div class="comboboxContainer">
-                        <p style="font-family: Verdana">4th Level</p>
-                        <input type="text" id="option43" list="combo43" class="combobox">
-                        <datalist id="combo43" class="combobox"/>
                     </div>
                 </div>
             </td>

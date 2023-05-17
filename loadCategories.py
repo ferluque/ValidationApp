@@ -1,22 +1,19 @@
 import pandas as pd
-xls = pd.ExcelFile('CESLabelsTree_asv_march2023.xlsx')
-df = pd.read_excel(xls, 'New Label Tree')[['2nd level', '3rd level',  '4th level']]
+# xls = pd.ExcelFile('ValidationAppWeb/resources/human_validation.csv')
+# df = pd.read_excel(xls, 'New Label Tree')[['2nd level', '3rd level',  '4th level']]
+df = pd.read_csv('ValidationAppWeb/resources/old_mpii_human_pose_v1_u12_1.csv')
 
 categories_DB = {}
 
 for idx, row in df.iterrows():
-    if not(row[0] in categories_DB):
-        categories_DB[row[0]] = {}
-        categories_DB[row[0]][row[1]] = []
-        if not (row[2] in categories_DB[row[0]][row[1]]):
-            if not(pd.isna(row[2])):
-                categories_DB[row[0]][row[1]].append(row[2])
+    if not(row[3] in categories_DB):
+        categories_DB[row[3]] = []
+        if not (row[4] in categories_DB[row[3]]):
+            categories_DB[row[3]].append(row[4])
     else:
-        if not(row[1] in categories_DB[row[0]]):
-            categories_DB[row[0]][row[1]] = []
-        if not (row[2] in categories_DB[row[0]][row[1]]):
-            if not(pd.isna(row[2])):
-                categories_DB[row[0]][row[1]].append(row[2])
+        if not(row[4] in categories_DB[row[3]]):
+            categories_DB[row[3]].append(row[4])
+
 import json
-with open("Categories\\CESLabelsTreeDict.json", "w") as fp:
+with open("ValidationAppWeb/resources/categories.json", "w") as fp:
     json.dump(categories_DB,fp)
