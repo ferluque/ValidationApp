@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="46653d0a-c614-4372-9a58-6739894c7ccf" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="CSS File" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2NTXpLlnM1mMFtt1rHk9uB014nm" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/fl156/Desktop/TFG/ValidationApp",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.web.browsers",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\fl156\WebstormProjects\ValidationApp\resources" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JavaScript Debug.MainPage2">
+    <configuration name="MainPage" type="JavascriptDebugType" temporary="true" engineId="53e2f627-b1a7-4dfa-bfa7-5b83cc034776" uri="http://localhost:63342/ValidationApp/MainPage.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="MainPage2" type="JavascriptDebugType" engineId="53e2f627-b1a7-4dfa-bfa7-5b83cc034776" uri="http://localhost:63342/ValidationApp/MainPage2.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="JavaScript Debug.MainPage2" />
+      <item itemvalue="JavaScript Debug.MainPage" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.MainPage" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="46653d0a-c614-4372-9a58-6739894c7ccf" name="Changes" comment="" />
+      <created>1679689228177</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1679689228177</updated>
+      <workItem from="1679689229661" duration="5128000" />
+      <workItem from="1679735874015" duration="4158000" />
+      <workItem from="1679839627713" duration="3346000" />
+      <workItem from="1679940449162" duration="3293000" />
+      <workItem from="1679994779929" duration="440000" />
+      <workItem from="1680103373963" duration="4080000" />
+      <workItem from="1680107536974" duration="1863000" />
+      <workItem from="1680249635244" duration="1196000" />
+      <workItem from="1681229417991" duration="5035000" />
+      <workItem from="1681244429879" duration="1295000" />
+      <workItem from="1681321326862" duration="454000" />
+      <workItem from="1681463328872" duration="605000" />
+      <workItem from="1681748285329" duration="4931000" />
+      <workItem from="1682790967774" duration="84000" />
+      <workItem from="1684314182676" duration="596000" />
+      <workItem from="1684316039869" duration="54000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/MainPage.html</url>
+          <line>107</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/MainPage.html</url>
+          <line>18</line>
+          <option name="timeStamp" value="42" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/MainPage2.html</url>
+          <line>349</line>
+          <option name="timeStamp" value="44" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/MainPage2.html</url>
+          <line>77</line>
+          <option name="timeStamp" value="59" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/ValidationApp$Unnamed.dat" NAME="Unnamed Coverage Results" MODIFIED="1680108467928" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="WipCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+</project>
