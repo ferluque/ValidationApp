@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html>
+        <head>
+        <meta charset="UTF-8">
+        <title>Página de inicio</title>
+    <style>
+        header {
+            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .logo1 img,
+        .logo2 img,
+        .logo3 img {
+            max-height: 75px;
+            box-shadow: none;
+        }
+
+        .logo2 {
+            order: 2;
+        }
+
+        .logo3 {
+            order: 3;
+        }
+        h1 {
+            font-size: 30px;
+            box-shadow: 0 2px 0px rgba(0, 0, 0, 0.1);
+            font-weight: inherit;
+            margin: 0;
+            font-family: Verdana;
+            text-align: center;
+            margin-top: 5px;
+            padding-bottom: 20px;
+        }
+        .button {
+            margin-top: 20px;
+            background-color: #fff;
+            border: 1px solid #d5d9d9;
+            border-radius: 8px;
+            box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+            box-sizing: border-box;
+            color: #0f1111;
+            cursor: pointer;
+            font-family: Verdana;
+            font-size: 13px;
+            line-height: 29px;
+            padding: 0 10px 0 11px;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: middle;
+            horiz-align: center;
+            width: 300px;
+            height: 150px;
+            font-size: 25px;
+        }
+
+        .button:hover {
+            background-color: #f7fafa;
+        }
+
+        .button:focus {
+            border-color: #008296;
+            box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+            outline: 0;
+        }
+        .uploadFile {
+            horiz-align: center;
+            margin-top: 20px;
+            display: flex;
+
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo1"><img src="resources/decsai_1024px.png"></div>
+    <div class="logo2"><img src="resources/UGR-Logo.png"></div>
+    <div class="logo3"><img src="resources/fcienciasLogo.png"></div>
+</header>
+<h1>Validation App</h1>
+<!--<div class="uploadFile">-->
+<!--    <form id = "myForm" class="uploadFile" action="MainPage.html" method="post" enctype="multipart/form-data">-->
+<!--        <input type="file" id="input-csv">-->
+<!--        <input type="submit" value="Enviar">-->
+<!--    </form>-->
+<!--</div>-->
+<!--<script>-->
+<!--    const input = document.getElementById('input-csv');-->
+<!--    input.addEventListener('change', function() {-->
+<!--        const file = input.files[0];-->
+<!--        const reader = new FileReader();-->
+<!--        reader.addEventListener('load', function() {-->
+<!--            const contenido = reader.result;-->
+<!--            const filas = contenido.split('\n');-->
+
+<!--            // Procesar las filas del archivo CSV aquí-->
+<!--        });-->
+
+<!--        reader.readAsText(file);-->
+<!--    });-->
+<!--</script>-->
+
+<!--<div style="text-align: center; margin-top: 40px;">-->
+<!--    <a href="MainPage.html?distribution=aleatoria"><button class="button" style="margin-right: 25px">Aleatoria</button></a>-->
+<!--    <a href="MainPage.html?distribution=aleatoriaCategorias"><button class="button">Aleatoria por categorías</button></a>-->
+<!--</div>-->
+<!-- Scripts de JavaScript -->
+<script>
+    function setDistribution(type) {
+        console.log(type);
+        window.location.href = "MainPage.html?distribution="+type;
+    }
+</script>
+</body>
+</html>
