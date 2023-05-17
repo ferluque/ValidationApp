@@ -1,0 +1,220 @@
+{
+  "Species": {
+    "Animals": [
+      "Vertebrates",
+      "Invertebrates"
+    ],
+    "Fungus": [
+      "coral fungus",
+      "mushrooms"
+    ],
+    "Algae": [],
+    "Lichens": [],
+    "Plants": [
+      "flowers",
+      "leaves",
+      "trees",
+      "fruits"
+    ]
+  },
+  "Land/seascapes": {
+    "Landforms": [
+      "Mountain and glacial landforms",
+      "Continental plain",
+      "Volcanic landform",
+      "Erosion landforms",
+      "Lacustrine landforms",
+      "Fluvial landform",
+      "Coastal and oceanic landforms"
+    ],
+    "Vegetation and habitats": [
+      "Forest lands",
+      "Agricultural lands",
+      "Agroforestry",
+      "Desert",
+      "Marine",
+      "Shrublands",
+      "Grasslands"
+    ],
+    "Other abiotic features": [
+      "Horizon",
+      "Sky",
+      "Clouds",
+      "Ocean"
+    ]
+  },
+  "Intellectual interactions": {
+    "Spiritual, symbolic and related connotations": [
+      "Church",
+      "pagoda",
+      "synagogue",
+      "monastery",
+      "mosque",
+      "stupa",
+      "Cementery",
+      "Mausoleum",
+      "attending church, general",
+      "charity work",
+      "kneeling in church or at home, praying",
+      "serving food in church",
+      "singing in church",
+      "sitting in church",
+      "sitting, playing an instrument at church",
+      "standing, talking in church",
+      "meditating"
+    ],
+    "Knowledge": [
+      "Education",
+      "Research activity"
+    ],
+    "Heritage and culture": [
+      "viaduct",
+      "Ancient settlement",
+      "Mine",
+      "Aljibe",
+      "Watermill",
+      "windmill",
+      "Old road",
+      "Cave",
+      "Monument",
+      "bullring",
+      "Fountain",
+      "beacon",
+      "stone wall",
+      "totem pole",
+      "catacomb"
+    ]
+  },
+  "Physical interaction (Recreation)": {
+    "Water activities": [
+      "Canoeing",
+      "Boat",
+      "Swimming",
+      "Snorkeling",
+      "Surfing"
+    ],
+    "Winter activities": [
+      "ski",
+      "dog sledding",
+      "sledding, tobogganing, bobsledding, luge"
+    ],
+    "Air activities": [
+      "Paragliding"
+    ],
+    "Terrestrial activities": [
+      "walking",
+      "byclicling",
+      "lawn and garden",
+      "farming",
+      "forestry",
+      "Horse riding",
+      "Running",
+      "Climbing",
+      "Motorriding",
+      "Hunting",
+      "Fishing",
+      "Picnicking",
+      "Bird watching",
+      "Camping",
+      "Orienteering"
+    ]
+  },
+  "Buidlings": {
+    "Accomodation": [
+      "chalet",
+      "hotel",
+      "house",
+      "hunting lodge outdoor",
+      "motel",
+      "ranch house",
+      "youth hostel",
+      "yurt",
+      "balcony",
+      "porch",
+      "orchard",
+      "patio",
+      "alcove",
+      "bathroom",
+      "bedchamber",
+      "bedroom",
+      "berth",
+      "bow window indoor",
+      "closet",
+      "dinette home",
+      "dorm room",
+      "living room",
+      "shower room",
+      "Toilet",
+      "yard"
+    ],
+    "Gardens": [
+      "botanical garden",
+      "formal garden"
+    ],
+    "Villages": [
+      "plaza",
+      "village",
+      "alley",
+      "building facade",
+      "arcade",
+      "street",
+      "promenade",
+      "promenade deck"
+    ],
+    "Shelter": [
+      "barn",
+      "cottage",
+      "shed",
+      "tree house",
+      "oast house",
+      "cabin",
+      "cliff dwelling"
+    ],
+    "Commerce facilities": [
+      "markets",
+      "restaurants",
+      "local shops"
+    ]
+  },
+  "Accessibility": {
+    "Roads": [
+      "desert road",
+      "field road",
+      "forest road"
+    ],
+    "Tracks and trails": [
+      "boardwalk",
+      "forest path",
+      "mountain path",
+      "pier"
+    ],
+    "Bridge": [
+      "Bridge",
+      "rope bridge",
+      "suspension bridge"
+    ],
+    "Vehicle": [
+      "car",
+      "bus",
+      "minibus",
+      "minivan",
+      "motorbike",
+      "motorcycle",
+      "motor scooter, motorcycle",
+      "train",
+      "truck",
+      "moped",
+      "recreational vehicle",
+      "motor scooter"
+    ]
+  },
+  "Energy infrastructures": {
+    "dam": [],
+    "wind farm": []
+  },
+  "Other infraestructures": {
+    "breakwater": [],
+    "dock": [],
+    "lighthouse": []
+  }
+}
