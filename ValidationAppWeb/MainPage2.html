@@ -65,7 +65,6 @@
                             else
                                 ++cont;
                         }
-                        console.log(images_list);
                     }
 
                 }
@@ -74,6 +73,7 @@
             // Cargar imagen
             const imagen = new Image();
             imagen.src = "resources/images/"+images_list[currentImg][2];
+            // imagen.src = "resources/images/002812151.jpg";
             contenedorImagen.appendChild(imagen);
             contenedorImagen.style.visibility = "visible";
             // Ajustar tamaño de la imagen
