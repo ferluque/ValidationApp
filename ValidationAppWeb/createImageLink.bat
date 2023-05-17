@@ -1,0 +1,1 @@
+mklink /J C:\Users\fl156\Desktop\TFG\ValidationApp\ValidationAppWeb\resources\images C:\Users\fl156\Desktop\TFG\HumanPoseTraining\mpii_human_pose_v1_u12_2\images

@@ -7,7 +7,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script>
+        var currentImg = 0;
         var DB;
+        var images_list;
         var setComboBox1 = Array();
         var setComboBox2 = Array();
         var setOption1 = Array();
@@ -16,23 +18,62 @@
         var last1 = Array();
         var last2 = Array();
         $(function () {
-            for (let i=1; i<5; i++) {
-                setComboBox1.push(document.getElementById("combo"+i.toString()+"1"));
-                setOption1.push(document.getElementById("option"+i.toString()+"1"));
-                setComboBox2.push(document.getElementById("combo"+i.toString()+"2"));
-                setOption2.push(document.getElementById("option"+i.toString()+"2"));
+            for (let i = 1; i < 5; i++) {
+                setComboBox1.push(document.getElementById("combo" + i.toString() + "1"));
+                setOption1.push(document.getElementById("option" + i.toString() + "1"));
+                setComboBox2.push(document.getElementById("combo" + i.toString() + "2"));
+                setOption2.push(document.getElementById("option" + i.toString() + "2"));
                 last1.push('');
                 last2.push('');
             }
 
             contenedorImagen = document.getElementById("contenedorImagen");
 
-            // Cargar Archivo human_validation
 
+            // Cargar Lista de imágenes
+            var rawCSV = new XMLHttpRequest();
+            rawCSV.open("GET", 'resources/human_validation.csv', false);
+            rawCSV.onreadystatechange = function () {
+                if (rawCSV.readyState === 4) {
+                    if (rawCSV.status === 200 || rawCSV.status == 0) {
+                        images_list = rawCSV.responseText;
+                        images_list = images_list.split('\n');
+                        for (let i = 0; i < images_list.length; ++i) {
+                            if (images_list[i] != '') {
+                                images_list [i] = images_list[i].split(',');
+                                const inicio = 4;
+                                if (images_list[i][inicio].startsWith('"') && !images_list[i][inicio].endsWith(('"'))) {
+                                    let fin = 5;
+                                    for (let j = inicio; j < images_list[i].length; ++j) {
+                                        if (images_list[i][j].endsWith('"')) {
+                                            fin = j;
+                                            break;
+                                        }
+                                    }
+                                    let newField = images_list[i].slice(inicio, fin + 1).join()
+                                    let newRow = images_list[i].slice(0, inicio);
+                                    newRow.push(newField);
+                                    newRow = newRow.concat(images_list[i].slice(fin + 1, images_list[i].length));
+                                    images_list[i] = newRow;
+                                }
+                            }
+                        }
+                        let cont =0;
+                        while (cont<images_list.length) {
+                            if (images_list[cont][5]!='')
+                                images_list.splice(cont, 1);
+                            else
+                                ++cont;
+                        }
+                        console.log(images_list);
+                    }
 
+                }
+            }
+            rawCSV.send(null);
             // Cargar imagen
             const imagen = new Image();
-            imagen.src = "images/000001163.jpg";
+            imagen.src = "resources/images/"+images_list[currentImg][2];
             contenedorImagen.appendChild(imagen);
             contenedorImagen.style.visibility = "visible";
             // Ajustar tamaño de la imagen
@@ -59,7 +100,7 @@
                         DB = JSON.parse(DB);
                         var secondLevel = Object.keys(DB);
                         for (let i = 0; i < secondLevel.length; i++) {
-                            for (let j=0; j<4;j++) {
+                            for (let j = 0; j < 4; j++) {
                                 var opt = document.createElement('option');
                                 opt.value = secondLevel[i];
                                 opt.innerHTML = secondLevel[i];
@@ -74,9 +115,9 @@
             rawFile.send(null);
         });
         $(document).on('change', 'input', function () {
-            for (let i=0; i<4; i++) {
+            for (let i = 0; i < 4; i++) {
                 var selection = setOption1[i].value;
-                if (selection!='') {
+                if (selection != '') {
                     var thirdLevel = DB[selection];
                     setComboBox2[i].innerHTML = '';
                     if (last1[i] != selection) {
@@ -91,8 +132,7 @@
                             setComboBox2[i].appendChild(opt);
                         }
                     }
-                }
-                else {
+                } else {
                     setComboBox2[i].innerHTML = '';
                     setOption2[i].value = '';
                 }
