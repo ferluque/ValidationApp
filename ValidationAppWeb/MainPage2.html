@@ -31,6 +31,7 @@
 
 
             // Cargar Lista de imágenes
+            // A MODIFICAR
             var rawCSV = new XMLHttpRequest();
             rawCSV.open("GET", 'resources/human_validation.csv', false);
             rawCSV.onreadystatechange = function () {
@@ -89,7 +90,7 @@
                 imagen.style.height = nuevoAlto + "px";
             };
 
-            // Cargar Categorías
+            // Cargar Categorías del json
             var rawFile = new XMLHttpRequest();
             rawFile.open("GET", 'resources/categories.json', false);
             rawFile.onreadystatechange = function () {
@@ -106,13 +107,13 @@
                                 setComboBox1[j].appendChild(opt);
                             }
                         }
-                        // comboBox1.addEventListener('click', function() {
-                        // });
                     }
                 }
             }
             rawFile.send(null);
         });
+
+        // Gestión de la selección en los comboboxes
         $(document).on('change', 'input', function () {
             for (let i = 0; i < 4; i++) {
                 var selection = setOption1[i].value;
@@ -270,9 +271,9 @@
 </style>
 <body>
 <header>
-    <div class="logo1"><img src="resources/decsai_1024px.png"></div>
-    <div class="logo2"><img src="resources/UGR-Logo.png"></div>
-    <div class="logo3"><img src="resources/fcienciasLogo.png"></div>
+    <div class="logo1"><img src="resources/logos/decsai_1024px.png"></div>
+    <div class="logo2"><img src="resources/logos/UGR-Logo.png"></div>
+    <div class="logo3"><img src="resources/logos/fcienciasLogo.png"></div>
 </header>
 <hr style="margin-bottom: 25px; margin-top: 25px;"/>
 <div id="contenedor">
