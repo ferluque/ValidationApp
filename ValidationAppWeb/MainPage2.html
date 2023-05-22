@@ -58,9 +58,9 @@
                                 }
                             }
                         }
-                        let cont =0;
-                        while (cont<images_list.length) {
-                            if (images_list[cont][5]!='')
+                        let cont = 0;
+                        while (cont < images_list.length) {
+                            if (images_list[cont][5] != '')
                                 images_list.splice(cont, 1);
                             else
                                 ++cont;
@@ -72,12 +72,11 @@
             rawCSV.send(null);
             // Cargar imagen
             const imagen = new Image();
-            imagen.src = "resources/images/"+images_list[currentImg][2];
-            // imagen.src = "resources/images/002812151.jpg";
-            contenedorImagen.appendChild(imagen);
-            contenedorImagen.style.visibility = "visible";
+            imagen.src = "resources/images/" + images_list[currentImg][2];
             // Ajustar tamaño de la imagen
             imagen.onload = function () {
+                contenedorImagen.appendChild(imagen);
+                contenedorImagen.style.visibility = "visible";
                 const proporcion = imagen.width / imagen.height;
                 const anchoMaximo = 800;
                 let nuevoAncho = anchoMaximo;
@@ -149,6 +148,8 @@
 
     #contenedorImagen {
         margin: 10px;
+        width: 50%;
+        text-align: center;
     }
 
     img {
@@ -208,6 +209,7 @@
         horiz-align: center;
         width: 100px;
         display: block;
+        margin: auto;
     }
 
     .button:hover {
@@ -354,14 +356,85 @@
             </td>
         </tr>
         <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
             <td>
-                <button class="button" onclick="cambiarImagen()">Submit</button>
+                <button class="button" onclick="changeImage()">Submit</button>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
-
 </div>
+<script>
+    function changeImage() {
+        for (let i = 0; i < 4; i++) {
+            images_list[currentImg][2 * i + 5] = setOption1[i].value;
+            images_list[currentImg][2 * i + 6] = setOption2[i].value;
+        }
+        let aux = [];
+        for (let i=0; i<aux.length; i++)
+            aux[i] = images_list[i];
+        for (let i = 0; i < aux.length; i++) {
+            for (let j = 0; j < aux[i].length; ++j) {
+                if (aux[i][j])
+                    aux[i][j] = "\"" + aux[i][j] + "\"";
+            }
+            aux[i] = aux[i].join(',');
+        }
+        aux = aux.join('\n');
+        aux = ",index,file_name,cat_name,act_name,cat_name_human1,act_name_human1,cat_name_human2,act_name_human2,cat_name_human3,act_name_human3,cat_name_human4,act_name_human4\n" + aux;
+
+        $.ajax({
+            type: 'POST',
+            url: "resources/writeFile.py",
+            data: {param: aux},
+            dataType: "text",
+            success: function(response) {
+                output = response;
+                alert(output);
+            }
+        }).done(function(data) {
+            console.log(data);
+            alert(data);
+        });
+
+        currentImg = currentImg + 1;
+
+        // Cargar imagen
+        var imagen = new Image();
+        imagen.onload = function () {
+            contenedorImagen.innerHTML = "";
+            const proporcion = imagen.width / imagen.height;
+            const anchoMaximo = 800;
+            let nuevoAncho = anchoMaximo;
+            let nuevoAlto = anchoMaximo / proporcion;
+            if (nuevoAlto > imagen.height) {
+                nuevoAlto = imagen.height;
+                nuevoAncho = imagen.height * proporcion;
+            }
+            imagen.style.width = nuevoAncho + "px";
+            imagen.style.height = nuevoAlto + "px";
+            contenedorImagen.appendChild(imagen);
+        }
+        imagen.src = "resources/images/" + images_list[currentImg][2];
+        imagen.alt = images_list[currentImg][2];
+
+        for (let i=0; i<4; i++) {
+            setOption1[i].value = '';
+            setOption2[i].value = '';
+            setComboBox2[i].innerHTML = '';
+        }
+
+    }
+</script>
 </body>
 </html>
