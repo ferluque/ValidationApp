@@ -1,0 +1,61 @@
+,index,file_name,cat_name,act_name
+0,3456,006818662.jpg,sports,jai alai
+1,13370,075108953.jpg,sports,skateboarding
+2,10884,054457209.jpg,sports,skateboarding
+3,16628,043364592.jpg,inactivity quiet/light,reclining
+4,6264,048528072.jpg,inactivity quiet/light,reclining
+5,10141,012287558.jpg,inactivity quiet/light,reclining
+6,10163,004781106.jpg,miscellaneous,"standing, miscellaneous"
+7,9202,053792303.jpg,miscellaneous,"drawing, writing, painting, standing"
+8,13854,046394654.jpg,miscellaneous,"chess game, sitting"
+9,4807,041030372.jpg,occupation,"carpentry, general"
+10,9042,097789599.jpg,occupation,"garbage collector, walking, dumping bins into truck"
+11,8976,096934961.jpg,occupation,airline flight attendant
+12,14294,002429270.jpg,water activities,"diving, springboard or platform"
+13,11858,014934845.jpg,water activities,"swimming, lake, ocean, river (Taylor Codes 280, 295)"
+14,16375,071935583.jpg,water activities,"canoeing, kayaking, rowing, competitive"
+15,2571,041860727.jpg,home activities,"moving household items upstairs, carrying boxes or furniture"
+16,8460,032136996.jpg,home activities,feeding household animals
+17,7690,075187624.jpg,home activities,"polishing floors, standing, walking slowly, using electric polishing machine"
+18,1697,045400162.jpg,lawn and garden,"watering lawn or garden, standing or walking"
+19,17835,060987713.jpg,lawn and garden,"shoveling snow, by hand"
+20,15741,034649977.jpg,lawn and garden,raking roof with snow rake
+21,2501,063594033.jpg,religious activities,"sitting, playing an instrument at church"
+22,14981,001017500.jpg,religious activities,"standing, talking in church"
+23,15011,040483213.jpg,religious activities,"standing, talking in church"
+24,15181,032232183.jpg,winter activities,"skating, speed, competitive"
+25,86,092969765.jpg,winter activities,"skiing, climbing up"
+26,8208,020446672.jpg,winter activities,"skiing, downhill"
+27,11334,080871540.jpg,conditioning exercise,"pilates, general"
+28,9578,043644840.jpg,conditioning exercise,"upper body exercise, stationary bicycle - Airdyne (arms only) 40 rpm, moderate"
+29,1552,062092857.jpg,conditioning exercise,"home exercise, general"
+30,265,062585992.jpg,bicycling,"bicycling, racing and road"
+31,9426,099614683.jpg,bicycling,"bicycling, mountain"
+32,13902,045629588.jpg,bicycling,"bicycling, mountain"
+33,9776,081240248.jpg,fishing and hunting,"trapping game, general"
+34,4424,019819639.jpg,fishing and hunting,"fishing, general"
+35,2234,040815169.jpg,fishing and hunting,fishing from river bank
+36,5735,029575283.jpg,dancing,"ballet, modern, or jazz"
+37,6497,063800324.jpg,dancing,"ethnic or cultural dancing (e.g., Greek, Middle Eastern, hula, salsa, merengue, bamba y plena, flame"
+38,17737,040946845.jpg,dancing,"Caribbean dance (Abakua, Beguine, Bellair, Bongo, Brukin's, Caribbean Quadrills, Dinki Mini, Gere, G"
+39,1984,044554164.jpg,walking,climbing hills
+40,14854,080663612.jpg,walking,backpacking
+41,3132,015144552.jpg,walking,"walking, for exerceise, with ski poles"
+42,10325,035152804.jpg,running,jogging
+43,8780,015994080.jpg,running,"running, on a track, team practice"
+44,3533,082399765.jpg,running,running
+45,14661,023984156.jpg,self care,"eating, sitting"
+46,16414,024850233.jpg,self care,"eating, sitting"
+47,16440,066407237.jpg,self care,"eating, sitting"
+48,14442,009831146.jpg,home repair,"carpentry, finishing or refinishing cabinets or furniture"
+49,7670,062584667.jpg,home repair,laying or removing carpet
+50,7555,089323615.jpg,home repair,"painting, outside home (Taylor Code 650)"
+51,2053,059113030.jpg,volunteer activities,"walkrun play with children, moderate, only active periods"
+52,3746,081665524.jpg,volunteer activities,"walkrun play with children, moderate, only active periods"
+53,2058,007115829.jpg,volunteer activities,"walkrun play with children, moderate, only active periods"
+54,1213,093059521.jpg,music playing,"playing musical instruments, general"
+55,9709,077154994.jpg,music playing,"double bass, standing"
+56,13460,051746555.jpg,music playing,"trombone, standing"
+57,17577,004024086.jpg,transportation,pushing plane in and out of hangar
+58,13172,086869389.jpg,transportation,riding in a bus or train
+59,13187,011104639.jpg,transportation,riding in a bus or train

@@ -9,7 +9,7 @@
     <script>
         var currentImg = 0;
         var DB;
-        var images_list;
+        var image;
         var setComboBox1 = Array();
         var setComboBox2 = Array();
         var setOption1 = Array();
@@ -31,86 +31,62 @@
 
 
             // Cargar Lista de imágenes
-            // A MODIFICAR
-            var rawCSV = new XMLHttpRequest();
-            rawCSV.open("GET", 'resources/human_validation.csv', false);
-            rawCSV.onreadystatechange = function () {
-                if (rawCSV.readyState === 4) {
-                    if (rawCSV.status === 200 || rawCSV.status == 0) {
-                        images_list = rawCSV.responseText;
-                        images_list = images_list.split('\n');
-                        for (let i = 0; i < images_list.length; ++i) {
-                            if (images_list[i] != '') {
-                                images_list [i] = images_list[i].split(',');
-                                const inicio = 4;
-                                if (images_list[i][inicio].startsWith('"') && !images_list[i][inicio].endsWith(('"'))) {
-                                    let fin = 5;
-                                    for (let j = inicio; j < images_list[i].length; ++j) {
-                                        if (images_list[i][j].endsWith('"')) {
-                                            fin = j;
-                                            break;
-                                        }
-                                    }
-                                    let newField = images_list[i].slice(inicio, fin + 1).join()
-                                    let newRow = images_list[i].slice(0, inicio);
-                                    newRow.push(newField);
-                                    newRow = newRow.concat(images_list[i].slice(fin + 1, images_list[i].length));
-                                    images_list[i] = newRow;
+            $.ajax({
+                url: "http://127.0.0.1:8000/getImage",
+                type: "GET",
+                async: false,
+                success: function (result) {
+                    let i = Math.floor(Math.random() * Object.keys(result).length )+1;
+                    image = result[i];
+                },
+                error: function (error) {
+                    console.log(`Error ${error[0]}`)
+                }
+            });
+            if (image!=undefined) {
+                // Cargar imagen
+                const imagen = new Image();
+                imagen.src = "resources/images/" + image;
+                // Ajustar tamaño de la imagen
+                imagen.onload = function () {
+                    contenedorImagen.appendChild(imagen);
+                    contenedorImagen.style.visibility = "visible";
+                    const proporcion = imagen.width / imagen.height;
+                    const anchoMaximo = 800;
+                    let nuevoAncho = anchoMaximo;
+                    let nuevoAlto = anchoMaximo / proporcion;
+                    if (nuevoAlto > imagen.height) {
+                        nuevoAlto = imagen.height;
+                        nuevoAncho = imagen.height * proporcion;
+                    }
+                    imagen.style.width = nuevoAncho + "px";
+                    imagen.style.height = nuevoAlto + "px";
+                };
+                // Cargar Categorías del json
+                var rawFile = new XMLHttpRequest();
+                rawFile.open("GET", 'resources/categories.json', false);
+                rawFile.onreadystatechange = function () {
+                    if (rawFile.readyState === 4) {
+                        if (rawFile.status === 200 || rawFile.status == 0) {
+                            DB = rawFile.responseText;
+                            DB = JSON.parse(DB);
+                            var secondLevel = Object.keys(DB);
+                            for (let i = 0; i < secondLevel.length; i++) {
+                                for (let j = 0; j < 4; j++) {
+                                    var opt = document.createElement('option');
+                                    opt.value = secondLevel[i];
+                                    opt.innerHTML = secondLevel[i];
+                                    setComboBox1[j].appendChild(opt);
                                 }
                             }
                         }
-                        let cont = 0;
-                        while (cont < images_list.length) {
-                            if (images_list[cont][5] != '')
-                                images_list.splice(cont, 1);
-                            else
-                                ++cont;
-                        }
-                    }
-
-                }
-            }
-            rawCSV.send(null);
-            // Cargar imagen
-            const imagen = new Image();
-            imagen.src = "resources/images/" + images_list[currentImg][2];
-            // Ajustar tamaño de la imagen
-            imagen.onload = function () {
-                contenedorImagen.appendChild(imagen);
-                contenedorImagen.style.visibility = "visible";
-                const proporcion = imagen.width / imagen.height;
-                const anchoMaximo = 800;
-                let nuevoAncho = anchoMaximo;
-                let nuevoAlto = anchoMaximo / proporcion;
-                if (nuevoAlto > imagen.height) {
-                    nuevoAlto = imagen.height;
-                    nuevoAncho = imagen.height * proporcion;
-                }
-                imagen.style.width = nuevoAncho + "px";
-                imagen.style.height = nuevoAlto + "px";
-            };
-
-            // Cargar Categorías del json
-            var rawFile = new XMLHttpRequest();
-            rawFile.open("GET", 'resources/categories.json', false);
-            rawFile.onreadystatechange = function () {
-                if (rawFile.readyState === 4) {
-                    if (rawFile.status === 200 || rawFile.status == 0) {
-                        DB = rawFile.responseText;
-                        DB = JSON.parse(DB);
-                        var secondLevel = Object.keys(DB);
-                        for (let i = 0; i < secondLevel.length; i++) {
-                            for (let j = 0; j < 4; j++) {
-                                var opt = document.createElement('option');
-                                opt.value = secondLevel[i];
-                                opt.innerHTML = secondLevel[i];
-                                setComboBox1[j].appendChild(opt);
-                            }
-                        }
                     }
                 }
+                rawFile.send(null);
             }
-            rawFile.send(null);
+            else {
+                window.location.href = "Finished.html";
+            }
         });
 
         // Gestión de la selección en los comboboxes
@@ -240,7 +216,9 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        /*padding: 20px;*/
+        margin-top: 20px;
+        margin-left: 20px;
+        margin-right: 20px;
     }
 
     .logo1 img,
@@ -271,9 +249,9 @@
 </style>
 <body>
 <header>
-    <div class="logo1"><img src="resources/logos/decsai_1024px.png"></div>
-    <div class="logo2"><img src="resources/logos/UGR-Logo.png"></div>
-    <div class="logo3"><img src="resources/logos/fcienciasLogo.png"></div>
+    <div class="logo1"><a target="_blank" href="https://decsai.ugr.es"><img src="resources/logos/decsai_1024px.png"></a></div>
+    <div class="logo2"><a target="_blank" href="https://ugr.es"><img src="resources/logos/UGR-Logo.png"></a></div>
+    <div class="logo3"><a target="_blank" href="https://fciencias.ugr.es"><img src="resources/logos/fcienciasLogo.png"></a></div>
 </header>
 <hr style="margin-bottom: 25px; margin-top: 25px;"/>
 <div id="contenedor">
@@ -377,38 +355,34 @@
 </div>
 <script>
     function changeImage() {
+        let cont = 0;
+        let total = 0;
         for (let i = 0; i < 4; i++) {
-            images_list[currentImg][2 * i + 5] = setOption1[i].value;
-            images_list[currentImg][2 * i + 6] = setOption2[i].value;
-        }
-        let aux = [];
-        for (let i=0; i<aux.length; i++)
-            aux[i] = images_list[i];
-        for (let i = 0; i < aux.length; i++) {
-            for (let j = 0; j < aux[i].length; ++j) {
-                if (aux[i][j])
-                    aux[i][j] = "\"" + aux[i][j] + "\"";
+            let url = "http://127.0.0.1:8000/insertValidation/?file_name=" + image + "&cat_name=" + setOption1[i].value + "&act_name=" + setOption2[i].value;
+            if (setOption1[i].value != '' || setOption2[i].value != '') {
+                total += 1;
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    async: false,
+                    success: function (result) {
+                        console.log(result[0]);
+                        if (result[0]==="OK")
+                            cont += 1;
+                    },
+                    error: function (error) {
+                        console.log(`Error ${error}`)
+                    }
+                });
             }
-            aux[i] = aux[i].join(',');
         }
-        aux = aux.join('\n');
-        aux = ",index,file_name,cat_name,act_name,cat_name_human1,act_name_human1,cat_name_human2,act_name_human2,cat_name_human3,act_name_human3,cat_name_human4,act_name_human4\n" + aux;
+        if (cont===total)
+            alert("Validations saved");
+        else if (cont==0)
+            alert("ERROR: Image already validated");
+        else
+            alert(cont + " validations saved. Then maximum reached");
 
-        $.ajax({
-            type: 'POST',
-            url: "resources/writeFile.py",
-            data: {param: aux},
-            dataType: "text",
-            success: function(response) {
-                output = response;
-                alert(output);
-            }
-        }).done(function(data) {
-            console.log(data);
-            alert(data);
-        });
-
-        currentImg = currentImg + 1;
 
         // Cargar imagen
         var imagen = new Image();
@@ -426,10 +400,24 @@
             imagen.style.height = nuevoAlto + "px";
             contenedorImagen.appendChild(imagen);
         }
-        imagen.src = "resources/images/" + images_list[currentImg][2];
-        imagen.alt = images_list[currentImg][2];
 
-        for (let i=0; i<4; i++) {
+        $.ajax({
+            url: "http://127.0.0.1:8000/getImage",
+            type: "GET",
+            async: false,
+            success: function (result) {
+                let i = Math.floor(Math.random() * Object.keys(result).length )+1;
+                image = result[i];
+            },
+            error: function (error) {
+                console.log(`Error ${error}`)
+            }
+        });
+
+        imagen.src = "resources/images/" + image;
+        imagen.alt = image;
+
+        for (let i = 0; i < 4; i++) {
             setOption1[i].value = '';
             setOption2[i].value = '';
             setComboBox2[i].innerHTML = '';
