@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Validation App</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="style.css" type="text/css"/>
+</head>
+<body>
+<header>
+  <div class="logo1"><a target="_blank" href="https://decsai.ugr.es"><img src="resources/logos/decsai_1024px.png"></a></div>
+  <div class="logo2"><a target="_blank" href="https://ugr.es"><img src="resources/logos/UGR-Logo.png"></a></div>
+  <div class="logo3"><a target="_blank" href="https://fciencias.ugr.es"><img src="resources/logos/fcienciasLogo.png"></a></div>
+</header>
+<hr style="margin-bottom: 25px; margin-top: 25px;"/>
+
+<loginBox style="border: 1px solid lightgray; border-radius: 5px; text-align: center; width: 20%; display: block; margin: auto; margin-top: 5%; position: relative;">
+  <div style="width: 70%; margin: auto; margin-top: 10%; position: relative">
+    <p style="text-align: left; font-family: Verdana">Usuario</p>
+    <input id="username" style="display: block; margin: auto; margin-top: 2%; border-color: gray; border-radius: 5px; min-height: 25px; min-width: 100%;font-family: Verdana" type="text"/>
+
+    <p style="text-align: left; font-family: Verdana">Contraseña</p>
+    <input id="password" style="display: block; margin: auto; margin-top: 2%; margin-bottom: 15%; border-color: gray; border-radius: 5px; min-height: 25px; min-width: 100%; font-family: Verdana" type="password"/>
+
+    <button class="button" style="margin-bottom: 15%;" onclick="login()">Login</button>
+    <div style="margin-bottom: 15%;"><a style="font-family: Verdana; font-size: 15px; height: 10%; margin-bottom: 15%;" href="Register.html">¿Aún no tienes cuenta? Regístrate</a></div>
+  </div>
+</loginBox>
+<script type="text/javascript" src="md5.js"></script>
+<script>
+  function login() {
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+    password = md5(password.toString());
+    let url = "http://127.0.0.1:8000/login/?username=" + username + "&password=" + password;
+    if (username != '' && password != '') {
+      $.ajax({
+        url: url,
+        type: "GET",
+        async: false,
+        success: function (result) {
+          if (result[0]==="OK") {
+            window.location.href = "MainPage.html/?username=" + username+"&password="+password;
+          }
+          else {
+            if (result[0]==="Not Registered"){
+              alert("Please register yourself");
+              window.location.href = "Register.html";
+            }
+            else {
+              alert("Incorrect Password");
+            }
+          }
+        },
+        error: function (error) {
+          console.log(`Error ${error}`)
+        }
+      });
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,40 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<style>
-    p {
-        text-align: center;
-        font-size: 30px;
-    }
-
-    header {
-        background-color: #fff;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-        margin-left: 20px;
-        margin-right: 20px;
-    }
-
-    .logo1 img,
-    .logo2 img,
-    .logo3 img {
-        max-height: 75px;
-        box-shadow: none;
-    }
-</style>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" href="../style.css" type="text/css"/>
+    <title>Statistics</title>
+    <script>
+        $(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            username = urlParams.get("username");
+            passHash = urlParams.get("password").toString();
+            var truePass;
+            $.ajax({
+                url: "http://127.0.0.1:8000/getPassword?username=" + username,
+                type: "GET",
+                async: false,
+                success: function (result) {
+                    truePass = result[0].toString();
+                },
+                error: function (error) {
+                    console.log(`Error ${error[0]}`)
+                }
+            });
+            if (passHash === truePass) {
+
+            } else {
+                alert("Forbidden");
+                window.location.href = "../Login.html";
+            }
+        });
+    </script>
 </head>
 <body>
 <header>
-    <div class="logo1"><a target="_blank" href="https://decsai.ugr.es"><img src="resources/logos/decsai_1024px.png"></a></div>
-    <div class="logo2"><a target="_blank" href="https://ugr.es"><img src="resources/logos/UGR-Logo.png"></a></div>
-    <div class="logo3"><a target="_blank" href="https://fciencias.ugr.es"><img src="resources/logos/fcienciasLogo.png"></a></div>
+    <div class="logo1"><a target="_blank" href="https://decsai.ugr.es"><img src="../resources/logos/decsai_1024px.png"></a>
+    </div>
+    <div class="logo2"><a target="_blank" href="https://ugr.es"><img src="../resources/logos/UGR-Logo.png"></a></div>
+    <div class="logo3"><a target="_blank" href="https://fciencias.ugr.es"><img src="../resources/logos/fcienciasLogo.png"></a>
+    </div>
 </header>
 <hr style="margin-bottom: 25px; margin-top: 25px;"/>
-<p>All images have been validated.</p>
+
+<p style="margin: auto; font-size: 30px; font-weight: bold; font-family: Verdana; width: 50%">Estadísticas</p>
+<br>
+<div style="margin:auto; border: 1px inset black; text-align: center; width: 50%; border-radius: 5px; font-family: Verdana; font-size: 20px">
+    <p style="margin-left: auto; margin-right: auto; margin-top: 8px; margin-bottom: 8px">General Accuracy</p>
+</div>
+
 
 </body>
 </html>

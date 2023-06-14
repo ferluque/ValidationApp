@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Validation App</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        var username;
+        var DB;
+        var image;
+        var setComboBox1 = Array();
+        var setComboBox2 = Array();
+        var setOption1 = Array();
+        var setOption2 = Array();
+        var contenedorImagen;
+        var last1 = Array();
+        var last2 = Array();
+        $(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            username = urlParams.get("username");
+            passHash = urlParams.get("password").toString();
+            var truePass;
+            $.ajax({
+                url: "http://127.0.0.1:8000/getPassword?username="+username,
+                type: "GET",
+                async: false,
+                success: function (result) {
+                    truePass = result[0].toString();
+                },
+                error: function (error) {
+                    console.log(`Error ${error[0]}`)
+                }
+            });
+            if (passHash === truePass) {
+                document.getElementById("loginLabel").innerText = "Logged in as " + username;
+                for (let i = 1; i < 5; i++) {
+                    setComboBox1.push(document.getElementById("combo" + i.toString() + "1"));
+                    setOption1.push(document.getElementById("option" + i.toString() + "1"));
+                    setComboBox2.push(document.getElementById("combo" + i.toString() + "2"));
+                    setOption2.push(document.getElementById("option" + i.toString() + "2"));
+                    last1.push('');
+                    last2.push('');
+                }
+
+                contenedorImagen = document.getElementById("contenedorImagen");
+
+                var total = 0;
+                $.ajax({
+                    url: "http://127.0.0.1:8000/countTotal",
+                    type: "GET",
+                    async: false,
+                    success: function (result) {
+                        total = result[0];
+                    },
+                    error: function (error) {
+                        console.log(`Error ${error[0]}`)
+                    }
+                });
+                // Mostrar progreso
+                var validated = 0;
+                $.ajax({
+                    url: "http://127.0.0.1:8000/countValidated/?username=" + username,
+                    type: "GET",
+                    async: false,
+                    success: function (result) {
+                        validated = result[0];
+                    },
+                    error: function (error) {
+                        console.log(`Error ${error[0]}`)
+                    }
+                });
+                var ignored = 0;
+                $.ajax({
+                    url: "http://127.0.0.1:8000/countIgnored/?username=" + username,
+                    type: "GET",
+                    async: false,
+                    success: function (result) {
+                        ignored = result[0];
+                    },
+                    error: function (error) {
+                        console.log(`Error ${error[0]}`)
+                    }
+                });
+
+                document.getElementById("contadorValidated").innerText = "Validated: " + validated.toString() + "/" + total.toString();
+                document.getElementById("contadorIgnored").innerText = "Ignored: " + ignored.toString() + "/" + total.toString();
+
+
+                // Cargar Lista de imágenes
+                $.ajax({
+                    url: "http://127.0.0.1:8000/getImage/?username=" + username,
+                    type: "GET",
+                    async: false,
+                    success: function (result) {
+                        let i = Math.floor(Math.random() * Object.keys(result).length) + 1;
+                        image = result[i];
+                        console.log("Imagen: " + image)
+                    },
+                    error: function (error) {
+                        console.log(`Error ${error[0]}`)
+                    }
+                });
+                if (image != undefined) {
+                    // Cargar imagen
+                    const imagen = new Image();
+                    imagen.src = "../resources/images/" + image;
+                    // Ajustar tamaño de la imagen
+                    imagen.onload = function () {
+                        contenedorImagen.appendChild(imagen);
+                        contenedorImagen.style.visibility = "visible";
+                        const proporcion = imagen.width / imagen.height;
+                        const anchoMaximo = window.innerWidth/2-100;
+                        let nuevoAncho = anchoMaximo;
+                        let nuevoAlto = anchoMaximo / proporcion;
+                        if (nuevoAlto > imagen.height) {
+                            nuevoAlto = imagen.height;
+                            nuevoAncho = imagen.height * proporcion;
+                        }
+                        imagen.style.width = nuevoAncho + "px";
+                        imagen.style.height = nuevoAlto + "px";
+                    };
+                    // Ocultar selecciones
+                    document.getElementById("contenedorCombobox2").style.visibility = "hidden";
+                    document.getElementById("contenedorCombobox3").style.visibility = "hidden";
+                    document.getElementById("contenedorCombobox4").style.visibility = "hidden";
+                    document.getElementById("label2").style.visibility = "hidden";
+                    document.getElementById("label3").style.visibility = "hidden";
+                    document.getElementById("label4").style.visibility = "hidden";
+
+                    // Cargar Categorías del json
+                    var rawFile = new XMLHttpRequest();
+                    rawFile.open("GET", '../resources/categories.json', false);
+                    rawFile.onreadystatechange = function () {
+                        if (rawFile.readyState === 4) {
+                            if (rawFile.status === 200 || rawFile.status == 0) {
+                                DB = rawFile.responseText;
+                                DB = JSON.parse(DB);
+                                var secondLevel = Object.keys(DB);
+                                for (let i = 0; i < secondLevel.length; i++) {
+                                    for (let j = 0; j < 4; j++) {
+                                        var opt = document.createElement('option');
+                                        opt.value = secondLevel[i];
+                                        opt.innerHTML = secondLevel[i];
+                                        setComboBox1[j].appendChild(opt);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    rawFile.send(null);
+                } else {
+                    window.location.href = "../Finished.html/?username="+username+"&password="+passHash;
+                }
+            }
+            else {
+                alert("Forbidden");
+                window.location.href = "../Login.html"
+            }
+        });
+
+        // Gestión de la selección en los comboboxes
+        $(document).on('change', 'input', function () {
+            for (let i = 0; i < 4; i++) {
+                var selection = setOption1[i].value;
+                if (selection != '') {
+                    var thirdLevel = DB[selection];
+                    setComboBox2[i].innerHTML = '';
+                    if (last1[i] != selection) {
+                        setOption2[i].value = '';
+                    }
+                    last1[i] = selection;
+                    if (thirdLevel != undefined) {
+                        for (let j = 0; j < thirdLevel.length; j++) {
+                            var opt = document.createElement('option');
+                            opt.value = thirdLevel[j];
+                            opt.innerHTML = thirdLevel[j];
+                            setComboBox2[i].appendChild(opt);
+                        }
+                    }
+                    if (i < 3) {
+                        document.getElementById("contenedorCombobox" + (i + 2).toString()).style.visibility = "visible";
+                        document.getElementById("label" + (i + 2).toString()).style.visibility = "visible";
+                    }
+                } else {
+                    if (i < 3) {
+                        for (let j = i; j < 3; ++j) {
+                            setOption1[j].value = setOption1[j + 1].value;
+                            setOption2[j].value = setOption2[j + 1].value;
+                            setComboBox2[j].innerHTML = setComboBox2[j + 1].innerHTML;
+                            setComboBox1[j].innerHTML = setComboBox1[j + 1].innerHTML;
+                            last1[j] = setOption1[j].value;
+                            last2[j] = setOption2[j].value;
+                        }
+                        setOption1[3].value = setOption2[3].value = "";
+                        setComboBox2[3].innerHTML = "";
+                    }
+                    break;
+                }
+            }
+            let last = 0;
+            for (let j = 1; j < 4; ++j) {
+                if (setOption1[j].value != '')
+                    last = j;
+            }
+
+            for (let j = last + 2; j < 4; ++j) {
+                document.getElementById("contenedorCombobox" + (j + 1).toString()).style.visibility = "hidden";
+                document.getElementById("label" + (j + 1).toString()).style.visibility = "hidden";
+            }
+
+        });
+    </script>
+    <link rel="stylesheet" href="../style.css" type="text/css"/>
+</head>
+
+<body>
+<header>
+    <div class="logo1"><a target="_blank" href="https://decsai.ugr.es"><img src="../resources/logos/decsai_1024px.png"></a>
+    </div>
+    <div class="logo2"><a target="_blank" href="https://ugr.es"><img src="../resources/logos/UGR-Logo.png"></a></div>
+    <div class="logo3"><a target="_blank" href="https://fciencias.ugr.es"><img
+            src="../resources/logos/fcienciasLogo.png"></a></div>
+</header>
+<hr style="margin-bottom: 5px; margin-top: 25px;"/>
+<div class="row">
+    <div class="column"><p id="contadorValidated"
+                           style="text-align: left; margin-right: 20px; font-family: Verdana; font-size: smaller; margin-bottom: 0px"/>
+        <p id="contadorIgnored"
+           style="text-align: left; margin-right: 20px; font-family: Verdana; font-size: smaller; margin-top: 5px"/>
+    </div>
+    <div class="column"><p id="loginLabel"
+                           style="text-align: right; margin-right: 20px; font-family: Verdana; font-size: smaller; margin-bottom: 0px"/>
+        <a href="../Login.html">
+            <p
+                    style="max-height: 20px; text-align: right; margin-right: 20px; font-family: Verdana; font-size: smaller; margin-top: 5px">
+                Salir</p></a>
+    </div>
+</div>
+
+
+<div id="contenedor">
+    <div id="contenedorImagen"></div>
+    <table>
+        <tbody>
+        <tr>
+            <td id="label1" style="font-family: Verdana; text-align: left;"><strong style="margin-left: 85px;">First Label</strong></td>
+            <td id="label2" style="font-family: Verdana; text-align: left"><strong style="margin-left: 85px;">Second Label</strong></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="container" id="contenedorCombobox1">
+                    <div class="comboboxContainer">
+                        <p style="font-family: Verdana">1st Level</p>
+                        <input type="text" id="option11" list="combo11" class="combobox">
+                        <datalist id="combo11" class="combobox"/>
+                    </div>
+                    <div class="comboboxContainer">
+                        <p style="font-family: Verdana">2nd Level</p>
+                        <input type="text" id="option12" list="combo12" class="combobox">
+                        <datalist id="combo12" class="combobox"/>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="container" id="contenedorCombobox2">
+                    <div class="comboboxContainer">
+                        <p style="font-family: Verdana">1st Level</p>
+                        <input type="text" id="option21" list="combo21" class="combobox">
+                        <datalist id="combo21" class="combobox"/>
+                    </div>
+                    <div class="comboboxContainer">
+                        <p style="font-family: Verdana">2nd Level</p>
+                        <input type="text" id="option22" list="combo22" class="combobox">
+                        <datalist id="combo22" class="combobox"/>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td id="label3" style="font-family: Verdana; text-align: left;"><strong style="margin-left: 85px;">Third Label</strong></td>
+            <td id="label4" style="font-family: Verdana; text-align: left;"><strong style="margin-left: 85px;">Fourth Label</strong></td>
+        </tr>
+        <tr>
+            <td>
+                <div class="container" id="contenedorCombobox3">
+                    <div class="comboboxContainer">
+                        <p style="font-family: Verdana">1st Level</p>
+                        <input type="text" id="option31" list="combo31" class="combobox">
+                        <datalist id="combo31" class="combobox"/>
+                    </div>
+                    <div class="comboboxContainer">
+                        <p style="font-family: Verdana">2nd Level</p>
+                        <input type="text" id="option32" list="combo32" class="combobox">
+                        <datalist id="combo32" class="combobox"/>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="container" id="contenedorCombobox4">
+                    <div class="comboboxContainer">
+                        <p style="font-family: Verdana">1st Level</p>
+                        <input type="text" id="option41" list="combo41" class="combobox">
+                        <datalist id="combo41" class="combobox"/>
+                    </div>
+                    <div class="comboboxContainer">
+                        <p style="font-family: Verdana">2nd Level</p>
+                        <input type="text" id="option42" list="combo42" class="combobox">
+                        <datalist id="combo42" class="combobox"/>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <button class="button" style="border-color: #ff3333; font-weight: bold" onclick="ignoreImage()">Ignore
+                </button>
+            </td>
+            <td>
+                <button class="button" style="border-color: #33ff33; font-weight: bold" onclick="changeImage()">Submit
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</div>
+<script>
+    function ignoreImage() {
+        let url = "http://127.0.0.1:8000/ignoreImage/?file_name=" + image + "&username="+username;
+        $.ajax({
+            url: url,
+            type: "GET",
+            async: false,
+            success: function (result) {
+                console.log(result[0]);
+                if (result[0] === "OK")
+                    cont += 1;
+            },
+            error: function (error) {
+                console.log(`Error ${error}`)
+            }
+        });
+        // Cargar imagen
+        var imagen = new Image();
+        imagen.onload = function () {
+            contenedorImagen.innerHTML = "";
+            const proporcion = imagen.width / imagen.height;
+            const anchoMaximo = window.innerWidth/2-100;
+            let nuevoAncho = anchoMaximo;
+            let nuevoAlto = anchoMaximo / proporcion;
+            if (nuevoAlto > imagen.height) {
+                nuevoAlto = imagen.height;
+                nuevoAncho = imagen.height * proporcion;
+            }
+            imagen.style.width = nuevoAncho + "px";
+            imagen.style.height = nuevoAlto + "px";
+            contenedorImagen.appendChild(imagen);
+        }
+
+        $.ajax({
+            url: "http://127.0.0.1:8000/getImage/?username=" + username,
+            type: "GET",
+            async: false,
+            success: function (result) {
+                let i = Math.floor(Math.random() * Object.keys(result).length) + 1;
+                image = result[i];
+            },
+            error: function (error) {
+                console.log(`Error ${error}`)
+            }
+        });
+
+        imagen.src = "../resources/images/" + image;
+        imagen.alt = image;
+
+        for (let i = 0; i < 4; i++) {
+            setOption1[i].value = '';
+            setOption2[i].value = '';
+            setComboBox2[i].innerHTML = '';
+        }
+
+        document.getElementById("contenedorCombobox2").style.visibility = "hidden";
+        document.getElementById("contenedorCombobox3").style.visibility = "hidden";
+        document.getElementById("contenedorCombobox4").style.visibility = "hidden";
+        document.getElementById("label2").style.visibility = "hidden";
+        document.getElementById("label3").style.visibility = "hidden";
+        document.getElementById("label4").style.visibility = "hidden";
+        total = 0;
+        $.ajax({
+            url: "http://127.0.0.1:8000/countTotal",
+            type: "GET",
+            async: false,
+            success: function (result) {
+                total = result[0];
+            },
+            error: function (error) {
+                console.log(`Error ${error[0]}`)
+            }
+        });
+        // Mostrar progreso
+        validated = 0;
+        $.ajax({
+            url: "http://127.0.0.1:8000/countValidated/?username=" + username,
+            type: "GET",
+            async: false,
+            success: function (result) {
+                validated = result[0];
+            },
+            error: function (error) {
+                console.log(`Error ${error[0]}`)
+            }
+        });
+        ignored = 0;
+        $.ajax({
+            url: "http://127.0.0.1:8000/countIgnored/?username=" + username,
+            type: "GET",
+            async: false,
+            success: function (result) {
+                ignored = result[0];
+            },
+            error: function (error) {
+                console.log(`Error ${error[0]}`)
+            }
+        });
+
+        document.getElementById("contadorValidated").innerText = "Validated: " + validated.toString() + "/" + total.toString();
+        document.getElementById("contadorIgnored").innerText = "Ignored: " + ignored.toString() + "/" + total.toString();
+    }
+
+    function changeImage() {
+        let cont = 0;
+        let total = 0;
+        if (setOption1[0].value != '') {
+            for (let i = 0; i < 4; i++) {
+                let url = "http://127.0.0.1:8000/insertValidation/?file_name=" + image + "&cat_name=" + setOption1[i].value +
+                    "&act_name=" + setOption2[i].value +
+                    "&username=" + username +
+                    "&priority=" + i.toString();
+                if (setOption1[i].value != '' || setOption2[i].value != '') {
+                    total += 1;
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        async: false,
+                        success: function (result) {
+                            console.log(result[0]);
+                            if (result[0] === "OK")
+                                cont += 1;
+                        },
+                        error: function (error) {
+                            console.log(`Error ${error}`)
+                        }
+                    });
+                }
+            }
+            if (cont === total)
+                alert("Validations saved");
+            else if (cont == 0)
+                alert("ERROR: Image already validated");
+            else
+                alert(cont + " validations saved. Then maximum reached");
+
+
+            // Cargar imagen
+            var imagen = new Image();
+            imagen.onload = function () {
+                contenedorImagen.innerHTML = "";
+                const proporcion = imagen.width / imagen.height;
+                const anchoMaximo = 0.5 * window.innerWidth;
+                let nuevoAncho = anchoMaximo;
+                let nuevoAlto = anchoMaximo / proporcion;
+                if (nuevoAlto > imagen.height) {
+                    nuevoAlto = imagen.height;
+                    nuevoAncho = imagen.height * proporcion;
+                }
+                imagen.style.width = nuevoAncho + "px";
+                imagen.style.height = nuevoAlto + "px";
+                contenedorImagen.appendChild(imagen);
+            }
+
+            $.ajax({
+                url: "http://127.0.0.1:8000/getImage/?username=" + username,
+                type: "GET",
+                async: false,
+                success: function (result) {
+                    let i = Math.floor(Math.random() * Object.keys(result).length) + 1;
+                    image = result[i];
+                },
+                error: function (error) {
+                    console.log(`Error ${error}`)
+                }
+            });
+
+            imagen.src = "../resources/images/" + image;
+            imagen.alt = image;
+
+            for (let i = 0; i < 4; i++) {
+                setOption1[i].value = '';
+                setOption2[i].value = '';
+                setComboBox2[i].innerHTML = '';
+            }
+
+            document.getElementById("contenedorCombobox2").style.visibility = "hidden";
+            document.getElementById("contenedorCombobox3").style.visibility = "hidden";
+            document.getElementById("contenedorCombobox4").style.visibility = "hidden";
+            document.getElementById("label2").style.visibility = "hidden";
+            document.getElementById("label3").style.visibility = "hidden";
+            document.getElementById("label4").style.visibility = "hidden";
+            total = 0;
+            $.ajax({
+                url: "http://127.0.0.1:8000/countTotal",
+                type: "GET",
+                async: false,
+                success: function (result) {
+                    total = result[0];
+                },
+                error: function (error) {
+                    console.log(`Error ${error[0]}`)
+                }
+            });
+            // Mostrar progreso
+            validated = 0;
+            $.ajax({
+                url: "http://127.0.0.1:8000/countValidated/?username=" + username,
+                type: "GET",
+                async: false,
+                success: function (result) {
+                    validated = result[0];
+                },
+                error: function (error) {
+                    console.log(`Error ${error[0]}`)
+                }
+            });
+            ignored = 0;
+            $.ajax({
+                url: "http://127.0.0.1:8000/countIgnored/?username=" + username,
+                type: "GET",
+                async: false,
+                success: function (result) {
+                    ignored = result[0];
+                },
+                error: function (error) {
+                    console.log(`Error ${error[0]}`)
+                }
+            });
+
+            document.getElementById("contadorValidated").innerText = "Validated: " + validated.toString() + "/" + total.toString();
+            document.getElementById("contadorIgnored").innerText = "Ignored: " + ignored.toString() + "/" + total.toString();
+
+        } else {
+            alert("Please select some categories");
+        }
+    }
+</script>
+</body>
+</html>
