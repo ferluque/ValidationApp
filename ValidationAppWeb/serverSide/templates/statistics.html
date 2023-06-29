@@ -1,120 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>EarthCul Validation App</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script>
-        function deleteChildren(node) {
-            while (node.firstChild) {
-                node.removeChild(node.firstChild);
-            }            
-        }
-        function inputChanged() {
-            let firstEmpty = 5;
-            let lastValue = 1;
-            for (let i=1; i<5; i++) {
-                if ((document.getElementById("combo"+i.toString()+"1").value === "Low Detail") && (firstEmpty===5))
-                    firstEmpty = i;
-                if ((document.getElementById("combo"+i.toString()+"1").value != "Low Detail"))
-                    lastValue  = i;
-            }
-            console.log("FirstEmpty: "+firstEmpty.toString());
-            console.log("lastValue: "+lastValue.toString());
-            if (firstEmpty!=(lastValue+1)){
-                for (let i=firstEmpty; i<lastValue; i++) {
-                    document.getElementById("combo"+i.toString()+"1").value = document.getElementById("combo"+(i+1).toString()+"1").value;
-                    document.getElementById("combo"+i.toString()+"2").value = document.getElementById("combo"+(i+1).toString()+"2").value;
-                }
-                document.getElementById("combo"+lastValue.toString()+"1").value = "Low Detail";
-            }
-            for (let i=lastValue+1; i<5; i++) {
-                document.getElementById("label"+i.toString()).style.visibility = "hidden";                    
-            }
-
-            for (let i=1; i<5; i++) {
-                var secondCombo = document.getElementById("combo"+i.toString()+"2");
-                let selection = document.getElementById("combo"+i.toString()+"1").value;
-                var lowLevel;
-                deleteChildren(secondCombo);
-                if (selection!="Low Detail") {
-                    $.ajax({
-                        url: "http://127.0.0.1:8000/getCategories?category="+selection,
-                        type: "POST",
-                        async: false,
-                        success: function (result) {
-                            lowLevel = result["list"];
-                        },
-                        error: function (error) {
-                            console.log(`Error ${error[0]}`)
-                        }
-                    });        
-                    var opt = document.createElement("option");
-                    opt.value = "High Detail";
-                    opt.innerHTML = "High Detail";
-                    secondCombo.appendChild(opt);           
-                    if (lowLevel != undefined) {
-                        for (let j=0; j<lowLevel.length; ++j) {
-                            opt = document.createElement("option");
-                            opt.value = lowLevel[j];
-                            opt.innerHTML = lowLevel[j];
-                            secondCombo.appendChild(opt);
-                        }
-                    }                  
-                    secondCombo.style.visibility = "visible";
-                }  
-                else {
-                    document.getElementById("label"+i.toString()).style.visibility = "visible";
-                    secondCombo.style.visibility = "hidden";
-                    break;
-                }
-            }
-
-        }    
-    </script>
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-<div class="container">
-    <div class="row">
-        <div class="col text-center">
-            <a target="_blank" href="https://decsai.ugr.es"><img class="img-fluid" style="max-height: 100px; padding-top: 15px" src="{{url_for('static', path='/logos/decsai.png')}}"></a>
-        </div>
-        <div class="col text-center">
-                <a target="_blank" href="https://ugr.es"><img class="img-fluid" style="max-height: 100px; padding-top: 15px" src="{{url_for('static', path='/logos/ugr.png')}}"></a>
-        </div>
-        <div class="col text-center">
-            <a target="_blank" href="https://fciencias.ugr.es"><img class="img-fluid" style="max-height: 100px; padding-top: 15px" src="{{url_for('static', path='/logos/fciencias.png')}}"></a>
-        </div>
-    </div>
-    <div class="row">
-        <hr style="margin-bottom: 25px; margin-top: 25px;"/>
-    </div>
-    <div class="row">
-        <div class="col-1"> </div>
-        <div class="col-10">
-            <div class="row">
-                <form method="post">
-                {% for statistic in statistics %}
-                    <div class="col-6 col-lg-4" style="margin-bottom: 25px">
-                        <div class="card card-body">
-                            <h5 class="card-title">{{statistic.name}}</h5>
-                            <input type="hidden" name="selection" value="{{statistic.name}}"/>
-                            <button formaction="/statistic" class="btn btn-primary">View</button>
-                        </div>
-                    </div>
-                {% endfor %}
-                </form>
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <a target="_blank" href="https://decsai.ugr.es"><img class="img-fluid"
+                        style="max-height: 100px; padding-top: 15px"
+                        src="{{url_for('static', path='/logos/decsai.png')}}"></a>
+            </div>
+            <div class="col text-center">
+                <a target="_blank" href="https://ugr.es"><img class="img-fluid"
+                        style="max-height: 100px; padding-top: 15px"
+                        src="{{url_for('static', path='/logos/ugr.png')}}"></a>
+            </div>
+            <div class="col text-center">
+                <a target="_blank" href="https://fciencias.ugr.es"><img class="img-fluid"
+                        style="max-height: 100px; padding-top: 15px"
+                        src="{{url_for('static', path='/logos/fciencias.png')}}"></a>
             </div>
         </div>
-        <div class="col-1"> </div>
+        <div class="row">
+            <hr style="margin-bottom: 25px; margin-top: 25px;" />
+        </div>
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8 text-center" style="margin-bottom: 25px;">
+                <h2>EarthCul Project Statistics</h2>
+            </div>
+            <div class="col-2"></div>
+        </div>
+        <div class="row">
+            <div class="col-1"> </div>
+            <div class="col-10">
+                <div class="row">
+                    {% for statistic in statistics %}
+                    <div class="col-6 col-lg-4" style="margin-bottom: 25px">
+                        <form method="post">
+                            <div class="card card-body">
+                                <h5 class="card-title">{{statistic.name}}</h5>
+                                <input type="hidden" name="selection" value="{{statistic.name}}" />
+                                <button formaction="/statistic" class="btn btn-primary">View</button>
+                            </div>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-1"> </div>
+        </div>
     </div>
-</div>
 </body>
+
 </html>
