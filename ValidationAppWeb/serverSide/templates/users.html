@@ -39,6 +39,7 @@
                             if (matched) {
                                 $("#responseText").html("");
                                 //Submit line commented out for example.  In production, remove the //
+                                console.log("Hola");
                                 $("#newUserForm").submit();
 
                                 //Shows success message and prevents submission.  In production, comment out the next 2 lines.
@@ -161,6 +162,7 @@
                             <div class="col-4 text-center" style="margin-top: auto; margin-bottom: auto">
                                 <input type="hidden" id="selection" name="selection" value="{{user.name}}" />
                                 <input type="hidden" name="adminUsername" value="{{adminUsername}}" />
+                                <input type="hidden" name="oldStatus" value="{{user.active}}" />
                                 <button type="submit" formaction="/changeUserActive"
                                     class="btn btn-outline-{%if user.active == 1%}danger{% else %}success{%endif%}">
                                     {% if user.active == 1 %}
