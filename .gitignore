@@ -1,6 +1,6 @@
 /ValidationAppWeb/resources/images
-.idea/jsLibraryMappings.xml
+.idea/
 OldDataset/
 /ValidationAppWeb/serverSide/__pycache__
-/ValidationAppWeb/serverSide/serverEnv
+/ValidationAppWeb/serverSide/serverEnv/*
 /ValidationAppWeb/serverSide/static/images

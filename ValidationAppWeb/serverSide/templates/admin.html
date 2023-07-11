@@ -13,7 +13,98 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+        $(document).ready(function () {
+            $("#newUserButton").click(function (e) {
+                e.preventDefault();
+                var matched,
+                    password = $("#password").val(),
+                    confirm = $("#passwordRepeat").val(),
+                    username = $("#username").val();
+                $.ajax({
+                    url: "http://127.0.0.1:8000/existsUser?username=" + username,
+                    type: "POST",
+                    async: false,
+                    success: function (result) {
+                        exists = result["result"];
+                    },
+                    error: function (error) {
+                        console.log(`Error ${error[0]}`)
+                    }
+                });
+                if (!exists) {
+                    if (username != undefined && username != "") {
+                        if (password != undefined && password != "") {
+                            matched = (password == confirm) ? true : false;
+                            if (matched) {
+                                $("#responseText").html("");
+                                //Submit line commented out for example.  In production, remove the //
+                                $("#newUserForm").submit();
 
+                                //Shows success message and prevents submission.  In production, comment out the next 2 lines.
+                                return true;
+                            }
+                            else {
+                                $("#responseText").html("Passwords don't match...");
+                                return false;
+                            }
+                        }
+                        else {
+                            $("#responseText").html("You must enter a password");
+                            return false;
+                        }
+                    }
+                    else {
+                        $("#responseText").html("You must enter an username");
+                        return false;
+                    }
+                }
+                else {
+                    $("#responseText").html("User already exists");
+                    return false;
+                }
+            })
+            $("#changePasswordButton").click(function (e) {
+                var matched,
+                    password = $("#passwordChange").val(),
+                    confirm = $("#passwordChangeRepeat").val();
+                console.log(password);
+                console.log(confirm);
+                if (password != undefined && password != "") {
+                    matched = (password == confirm) ? true : false;
+                    if (matched) {
+                        $("#responseText").html("");
+                        //Submit line commented out for example.  In production, remove the //
+                        $("#changePasswordForm").submit();
+
+                        //Shows success message and prevents submission.  In production, comment out the next 2 lines.
+                        return true;
+                    }
+                    else {
+                        $("#responseText").html("Passwords don't match...");
+                        return false;
+                    }
+                }
+                else {
+                    $("#responseText").html("You must enter a password");
+                    return false;
+                }
+            })
+            /*$("#changePasswordAction").click(function (e) {
+                e.preventDefault(); 
+                console.log(e.target.getAttribute("username"));
+                
+                document.getElementById("usernameChange").value = e.target.getAttribute("username");
+            });*/
+        });
+        function saveUsername(e) {
+            document.getElementById("usernameChange").value = e.target.getAttribute("username");
+        }
+    </script>
 </head>
 
 <body>
@@ -44,45 +135,127 @@
         <div class="row">
             <div class="col-3 col-lg-4"></div>
             <div class="col-6 col-lg-4 text-center" style="margin-bottom: 20px">
-                <form method="post">
-                    <input type="hidden" name="adminUsername" value="{{adminUsername}}"> 
-                    <button type="submit" class="btn btn-primary" style="min-width: 50%;" formaction="/users">Manage
-                        Users</button>
-                </form>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Add
+                    Manager</button>
             </div>
             <div class="col-3 col-lg-4 text-end">
-                <p style="margin-bottom: 0px">Hello, {{adminUsername}}</p>
+                <p style="margin-bottom: 0px">Hello, {{username}}</p>
                 <p><a href="/">logout</a></p>
             </div>
         </div>
         <div class="row">
-            <div class="col-1"> </div>
-            <div class="col-10">
-                <div class="row">
-                    {% for statistic in statistics %}
-                    <div class="col-6 col-lg-4" style="margin-bottom: 25px">
-                        <form method="post">
-                            <div class="card card-body">
-                                <h5 class="card-title">{{statistic.name}}</h5>
-                                <p>{{statistic.status}}</p>
-                                <input type="hidden" name="selection" value="{{statistic.name}}" />
-                                <button type="submit" formaction="/changeVisibility"
-                                    class="btn btn-outline-{{statistic.changeColor}}">
-                                    {% if statistic.status == "Visible" %}
+            <div class="col-3 col-lg-4"></div>
+            <div class="col-6 col-lg-4">
+                <form class="row" style="margin-bottom:20px;" method="post" action="/saveMinimum">
+                    <div class="col-8 col-lg-10">
+                        <label class="form-label" for="minimumConsensus" class="form-label">Minimum Consensus
+                            Percentage:
+                            <output>{{minimumConsensus}}</output>%
+                        </label>
+                        <input type="range" min="0" max="100" class="form-range" name="minimum" id="minimumConsensus"
+                            value="{{minimumConsensus}}"
+                            oninput="this.previousElementSibling.children[0].value = this.value">
+                        <input type="hidden" value="{{username}}" name="username">
+                    </div>
+                    <div class="col-4 col-lg-2 text-center" style="margin:auto">
+                        <button type="submit" class="btn btn-primary text" data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Minimum perrcentage of matching human labels to consider them valid">
+                            Save
+                        </button>
+                    </div>
+                </form>
+                {% for user in users %}
+                <div class="card card-body" style="margin-bottom: 20px">
+                    <form method="post">
+                        <div class="row">
+                            <div class="col-8">
+                                <h5 class="card-title" style="margin: auto">{{user.name}}</h5>
+                                <p class="text-muted" style="margin: auto">{%if user.active == 1%}Enabled{% else
+                                    %}Disabled{%endif%}</p>
+                                <a data-toggle="modal" data-target="#changePasswordModal" class="text-muted"
+                                    style="font-size: 12px;" username="{{user.name}}" onclick="saveUsername(event)" id="changePasswordAction">Change Password</a>
+                            </div>
+                            <!-- <div class="row"> -->
+                            <!-- </div> -->
+                            <div class="col-4 text-center" style="margin-top: auto; margin-bottom: auto">
+                                <input type="hidden" id="selection" name="selection" value="{{user.name}}" />
+                                <button type="submit" formaction="/changeUserActive"
+                                    class="btn btn-outline-{%if user.active == 1%}danger{% else %}success{%endif%}">
+                                    {% if user.active == 1 %}
                                     Disable
                                     {% else %}
                                     Enable
                                     {% endif %}
                                 </button>
                             </div>
-                        </form>
-                    </div>
-                    {% endfor %}
+                        </div>
+                    </form>
                 </div>
+                {% endfor %}
             </div>
-            <div class="col-1"> </div>
         </div>
     </div>
 </body>
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body" style="font-size: 20px; font-weight: bold">
+                New Password
+            </div>
+            <div class="row text-center">
+                <p style="font-family: Verdana; color: red; font-size: 13px" id="responseText"></p>
+            </div>
+            <div class="modal-footer row">
+                <form class="col-10" action="/changePassword" method="post" id="changePasswordForm">
+                    <input type="hidden" name="usernameChange" id="usernameChange" value=""> 
+                    <label class="form-label">Password</label>
+                    <input type="text" class="form-control" style="margin-bottom: 20px;" name="passwordChange"
+                        id="passwordChange" required>
+                    <label class="form-label">Repeat Password</label>
+                    <input type="text" class="form-control" style="margin-bottom: 20px;" name="passwordChangeRepeat"
+                        id="passwordChangeRepeat" required>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" id="changePasswordButton" class="btn btn-primary"
+                        formaction="/changePassword">Confirm</button>
+                </form>
+                <div class="col-1"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body" style="font-size: 20px; font-weight: bold">
+                New Manager Data
+            </div>
+            <div class="row text-center">
+                <p style="font-family: Verdana; color: red; font-size: 13px" id="responseText"></p>
+            </div>
+            <div class="modal-footer row">
+                <form class="col-10" action="/registerManager" method="post" id="newUserForm">
+                    <input type="hidden" name="adminUsername" value="{{username}}">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" style="margin-bottom: 10px;" name="username" id="username"
+                        required>
+                    <label class="form-label">Password</label>
+                    <input type="text" class="form-control" style="margin-bottom: 20px;" name="password" id="password"
+                        required>
+                    <label class="form-label">Repeat Password</label>
+                    <input type="text" class="form-control" style="margin-bottom: 20px;" name="passwordRepeat"
+                        id="passwordRepeat" required>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" id="newUserButton" class="btn btn-primary"
+                        formaction="/registerManager">Confirm</button>
+                </form>
+                <div class="col-1"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </html>

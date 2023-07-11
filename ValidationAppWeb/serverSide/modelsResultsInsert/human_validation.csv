@@ -1,51 +1,51 @@
-,index,Unnamed: 0,file_name,cat_name,act_name,act_id
-0,8602,8602,056970463.jpg,fishing and hunting,"fishing in stream, in waders (Taylor Code 670)",295
-1,7708,7708,036831038.jpg,home activities,"polishing floors, standing, walking slowly, using electric polishing machine",380
-2,2314,2314,053555381.jpg,conditioning exercise,"yoga, Power",417
-3,6535,6535,030345322.jpg,home repair,put on and removal of tarp - sailboat,315
-4,9452,9452,021592560.jpg,bicycling,"bicycling, mountain",238
-5,8856,8856,085223652.jpg,occupation,"bakery, general",661
-6,13224,13224,089590914.jpg,miscellaneous,"standing, miscellaneous",53
-7,2077,2077,000001163.jpg,volunteer activities,"walkrun play with children, moderate, only active periods",167
-8,1913,1913,046409516.jpg,home activities,"sweeping garage, sidewalk or outside of house",140
-9,6248,6248,001803201.jpg,home activities,cooking or food preparation,299
-10,9199,9199,063042175.jpg,conditioning exercise,health club exerceise classes,848
-11,1817,1817,012292068.jpg,fishing and hunting,"hunting, general",124
-12,1192,1192,017530294.jpg,volunteer activities,"sitting, doing work",72
-13,1331,1331,037216702.jpg,home repair,"painting inside house,wallpapering, scraping paint",552
-14,17727,17727,039773196.jpg,dancing,"Caribbean dance (Abakua, Beguine, Bellair, Bongo, Brukin's, Caribbean Quadrills, Dinki Mini, Gere, G",807
-15,857,857,098118618.jpg,conditioning exercise,"therapeutic exercise ball, Fitball exercise",25
-16,17884,17884,093462084.jpg,winter activities,"sledding, tobogganing, bobsledding, luge (Taylor Code 370)",812
-17,8995,8995,021157281.jpg,occupation,"garbage collector, walking, dumping bins into truck",692
-18,8667,8667,070173104.jpg,occupation,"postal carrier, walking to deliver mail",645
-19,14921,14921,013295227.jpg,water activities,snorkeling (Taylor Code 310),646
-20,14417,14417,054577749.jpg,water activities,"swimming, butterfly, general",601
-21,15835,15835,082832625.jpg,music playing,"cello, sitting",709
-22,10713,10713,080590565.jpg,occupation,"carpentry, general",785
-23,16251,16251,096555709.jpg,sports,"softball, general",736
-24,7688,7688,086875723.jpg,home activities,"polishing floors, standing, walking slowly, using electric polishing machine",380
-25,5426,5426,042418506.jpg,sports,paddleball,264
-26,9142,9142,021772903.jpg,occupation,horse racing,99
-27,60,60,031098232.jpg,miscellaneous,"standing, talking in person",982
-28,6457,6457,092019699.jpg,sports,"football, touch, flag",919
-29,14253,14253,007558509.jpg,home repair,washing and waxing car,588
-30,15605,15605,083208832.jpg,music playing,"guitar, classical, folk, sitting",570
-31,13088,13088,007660291.jpg,dancing,"aerobic, step",479
-32,16389,16389,078078785.jpg,sports,"rugby, touch, non-competitive",740
-33,16321,16321,075453798.jpg,home activities,"kitchen activity, general, (e.g., cooking, washing dishes, cleaning up), moderate effort",737
-34,3381,3381,083885386.jpg,occupation,"horse grooming, feeding, cleaning, harnessing and unharnessing",903
-35,10306,10306,039127686.jpg,miscellaneous,"laughing, sitting",339
-36,4932,4932,099920730.jpg,lawn and garden,trimming shrubs or trees,235
-37,17398,17398,037443616.jpg,home activities,"food shopping with or without a grocery cart, standing or walking",779
-38,9425,9425,096764709.jpg,bicycling,"bicycling, mountain",238
-39,126,126,098565045.jpg,sports,hacky sack,17
-40,12195,12195,085597586.jpg,lawn and garden,"planting seedlings, shrub, stooping, moderate effort",449
-41,5187,5187,020139910.jpg,winter activities,snowmobiling,254
-42,5679,5679,024720607.jpg,running,running,914
-43,3540,3540,034292966.jpg,running,running,914
-44,6585,6585,087154568.jpg,home activities,cooking or food preparation,318
-45,8037,8037,004027816.jpg,home repair,"painting inside house,wallpapering, scraping paint",552
-46,10452,10452,006970775.jpg,sports,frisbee,362
-47,7020,7020,048359305.jpg,running,"running, stairs, up",335
-48,14025,14025,089588384.jpg,occupation,"sitting, teaching stretching or yoga, or light effort exercise class",554
-49,6700,6700,001564330.jpg,walking,using crutches,327
+file_name,cat_name,act_name
+056970463.jpg,fishing and hunting,"fishing in stream, in waders (Taylor Code 670)"
+036831038.jpg,home activities,"polishing floors, standing, walking slowly, using electric polishing machine"
+053555381.jpg,conditioning exercise,"yoga, Power"
+030345322.jpg,home repair,put on and removal of tarp - sailboat
+021592560.jpg,bicycling,"bicycling, mountain"
+085223652.jpg,occupation,"bakery, general"
+089590914.jpg,miscellaneous,"standing, miscellaneous"
+000001163.jpg,volunteer activities,"walkrun play with children, moderate, only active periods"
+046409516.jpg,home activities,"sweeping garage, sidewalk or outside of house"
+001803201.jpg,home activities,cooking or food preparation
+063042175.jpg,conditioning exercise,health club exerceise classes
+012292068.jpg,fishing and hunting,"hunting, general"
+017530294.jpg,volunteer activities,"sitting, doing work"
+037216702.jpg,home repair,"painting inside house,wallpapering, scraping paint"
+039773196.jpg,dancing,"Caribbean dance (Abakua, Beguine, Bellair, Bongo, Brukin's, Caribbean Quadrills, Dinki Mini, Gere, G"
+098118618.jpg,conditioning exercise,"therapeutic exercise ball, Fitball exercise"
+093462084.jpg,winter activities,"sledding, tobogganing, bobsledding, luge (Taylor Code 370)"
+021157281.jpg,occupation,"garbage collector, walking, dumping bins into truck"
+070173104.jpg,occupation,"postal carrier, walking to deliver mail"
+013295227.jpg,water activities,snorkeling (Taylor Code 310)
+054577749.jpg,water activities,"swimming, butterfly, general"
+082832625.jpg,music playing,"cello, sitting"
+080590565.jpg,occupation,"carpentry, general"
+096555709.jpg,sports,"softball, general"
+086875723.jpg,home activities,"polishing floors, standing, walking slowly, using electric polishing machine"
+042418506.jpg,sports,paddleball
+021772903.jpg,occupation,horse racing
+031098232.jpg,miscellaneous,"standing, talking in person"
+092019699.jpg,sports,"football, touch, flag"
+007558509.jpg,home repair,washing and waxing car
+083208832.jpg,music playing,"guitar, classical, folk, sitting"
+007660291.jpg,dancing,"aerobic, step"
+078078785.jpg,sports,"rugby, touch, non-competitive"
+075453798.jpg,home activities,"kitchen activity, general, (e.g., cooking, washing dishes, cleaning up), moderate effort"
+083885386.jpg,occupation,"horse grooming, feeding, cleaning, harnessing and unharnessing"
+039127686.jpg,miscellaneous,"laughing, sitting"
+099920730.jpg,lawn and garden,trimming shrubs or trees
+037443616.jpg,home activities,"food shopping with or without a grocery cart, standing or walking"
+096764709.jpg,bicycling,"bicycling, mountain"
+098565045.jpg,sports,hacky sack
+085597586.jpg,lawn and garden,"planting seedlings, shrub, stooping, moderate effort"
+020139910.jpg,winter activities,snowmobiling
+024720607.jpg,running,running
+034292966.jpg,running,running
+087154568.jpg,home activities,cooking or food preparation
+004027816.jpg,home repair,"painting inside house,wallpapering, scraping paint"
+006970775.jpg,sports,frisbee
+048359305.jpg,running,"running, stairs, up"
+089588384.jpg,occupation,"sitting, teaching stretching or yoga, or light effort exercise class"
+001564330.jpg,walking,using crutches

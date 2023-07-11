@@ -14,22 +14,6 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
     <script>
-        function changeOption(e) {
-            var option = e.target.getAttribute("option");
-            // console.log(option);
-            const optionsList = document.getElementById("optionsList");
-            const contentList = document.getElementById("contentList");
-            for (const child of optionsList.children) {
-                child.children[0].classList.remove("active");
-            }
-            for (const child of contentList.children) {
-                child.style.display = "none";
-            }
-            document.getElementById("changeOption" + option).classList.add("active");
-            console.log(document.getElementById("content" + option));
-            document.getElementById("content" + option).style.display = "block";
-            console.log(document.getElementById("content" + option));
-        }
     </script>
 </head>
 
@@ -66,49 +50,25 @@
             <div class="col-10"></div>
             <div class="col-2"></div>
             <div class="col-8">
-                <h3 style="margin-bottom: 20px">{{name}}</h3>
-                <ul class="nav nav-tabs" id="optionsList">
-                    {% for option in figs.keys() %}
-                    {% if loop.index==1 %}
-                    <li class="nav-item">
-                        <a class="nav-link active" id="changeOption{{option}}" aria-current="page" option="{{option}}"
-                            onclick="changeOption(event)">{{option}}</a>
-                    </li>
-                    {% elif figs[option] %}
-                    <li class="nav-item">
-                        <a class="nav-link" id="changeOption{{option}}" aria-current="page" option="{{option}}"
-                            onclick="changeOption(event)">{{option}}</a>
-                    </li>
-                    {% endif %}
-                    {% endfor %}
-                </ul>
-                <div id="contentList">
-                    {% for option in figs.keys() %}
-                    {% if loop.index==1 %}
-                    <div id="content{{option}}">
-                        <form method="post" action="/getFileStatistic" style="margin-top: 20px">
+                <h3 style="margin-bottom: 10px">{{name}}</h3>
+                <span class="badge rounded-pill bg-success">Validated</span>
+                <span class="badge rounded-pill bg-danger" style="margin-bottom: 10px;">Ignored</span>
+
+
+                {% for option in progresses.keys() %}
+                <div id="row" style="margin-bottom: 20px">
+                    <h5>{{option}}</h5>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{progresses[option][0]}}%" aria-valuenow="{{progresses[option][0]}}" aria-valuemin="0" aria-valuemax="100">{{progresses[option][0]}}%</div>
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: {{progresses[option][1]}}%" aria-valuenow="{{progresses[option][0]}}" aria-valuemin="0" aria-valuemax="100">{{progresses[option][1]}}%</div>
+                    </div>
+                    <!-- <form method="post" action="/getFileStatistic" style="margin-top: 20px">
                             <input type="hidden" name="name" value="{{name}}">
                             <input type="hidden" name="option" value="{{option}}">
                             <button type="submit" class="btn btn-success" style="margin-bottom: 20px">Export EXCEL file</button>
-                        </form>
-                        {% for level in figs[option] %}                        
-                        {{level|safe}}
-                        {% endfor %}
-                    </div>
-                    {% elif figs[option] %}
-                    <div id="content{{option}}" style="display:none;">
-                        <form method="post" action="/getFileStatistic" style="margin-top: 20px">
-                            <input type="hidden" name="name" value="{{name}}">
-                            <input type="hidden" name="option" value="{{option}}">
-                            <button type="submit" class="btn btn-success" style="margin-bottom: 20px">Export EXCEL file</button>
-                        </form>
-                        {% for level in figs[option] %}
-                        {{level|safe}}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    {% endfor %}
+                        </form> -->
                 </div>
+                {% endfor %}
             </div>
             <div class="col-2"></div>
         </div>

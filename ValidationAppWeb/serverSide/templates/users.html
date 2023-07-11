@@ -68,8 +68,6 @@
                 var matched,
                     password = $("#passwordChange").val(),
                     confirm = $("#passwordChangeRepeat").val();
-                console.log(password);
-                console.log(confirm);
                 if (password != undefined && password != "") {
                     matched = (password == confirm) ? true : false;
                     if (matched) {
@@ -130,7 +128,7 @@
         </div>
         <div class="row">
             <div class="col-2">
-                <form action="/admin?adminUsername={{adminUsername}}" method="post">
+                <form action="/manager?adminUsername={{adminUsername}}" method="post">
                     <button type="submit" action="/admin"
                         class="btn btn-outline-secondary">Go Back</button></form>
             </div>

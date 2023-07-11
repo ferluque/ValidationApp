@@ -102,10 +102,10 @@ async def login(request: Request, username: Annotated[str, Form()], password: An
                 return templates.TemplateResponse("login.html", {"request": request, "loginInfo" : "No more images"})
         # Manager
         if result[2]==1 and result[3]==1:
-            return RedirectResponse(app.url_path_for('admin')+"?adminUsername="+username)
+            return RedirectResponse(app.url_path_for('manager')+"?adminUsername="+username)
         # Administrator
         if result[2]==1 and result[3]==2:
-            return RedirectResponse(app.url_path_for('adminsManagement')+"?username="+username)
+            return RedirectResponse(app.url_path_for('admin')+"?username="+username)
         if result[2]==0:
             return templates.TemplateResponse("login.html", {"request": request, "loginInfo" : "Your user has been disabled"})
 
@@ -152,7 +152,6 @@ def submit(request: Request, imgUrl: Annotated[str, Form()], username: Annotated
 def ignoreImage(imgUrl, username):
     sentence = "insert into validation (file_name, username, timestamp, ignored) values (\""\
         +imgUrl+"\",\""+username+"\", \""+str(datetime.datetime.now())+"\","+str(1)+")"
-    print(sentence)
     sentence = cur.execute(sentence)
     connection.commit()
     
@@ -182,8 +181,8 @@ def statistics(request : Request):
     
     return templates.TemplateResponse("statistics.html", {"request": request, "statistics": statistics})
     
-@app.post("/admin", response_class=HTMLResponse)
-def admin(request : Request, adminUsername : str):
+@app.post("/manager", response_class=HTMLResponse)
+def manager(request : Request, adminUsername : str):
     select = "select * from statistics"
     statistics = []
     for row in enumerate(cur.execute(select)):
@@ -196,7 +195,7 @@ def admin(request : Request, adminUsername : str):
             status = "Visible"
             changeColor = "danger"
         statistics.append({"style":style, "name": row[0], "status": status, "changeColor": changeColor})
-    return templates.TemplateResponse("admin.html", {"request" : request, "statistics" : statistics, "adminUsername":adminUsername})
+    return templates.TemplateResponse("manager.html", {"request" : request, "statistics" : statistics, "adminUsername":adminUsername})
 
 @app.post("/changeVisibility")
 def changeVisibility(request: Request, selection : Annotated[str, Form()], adminUsername : Annotated[str, Form()]):
@@ -207,7 +206,7 @@ def changeVisibility(request: Request, selection : Annotated[str, Form()], admin
     select = "update statistics set active="+str(visibility)+" where name=\""+selection+"\""
     cur.execute(select)
     connection.commit()
-    return RedirectResponse(app.url_path_for('admin')+"?adminUsername="+adminUsername)
+    return RedirectResponse(app.url_path_for('manager')+"?adminUsername="+adminUsername)
 
 @app.post("/users", response_class= HTMLResponse)
 def getUsers(request : Request, adminUsername : Annotated[str, Form()]):
@@ -256,18 +255,32 @@ def statistic(request : Request, selection : Annotated[str, Form()]):
     if selection=="Accuracy per Model":
         figs = generateAllLevelsModelAccuracyTables()
         return templates.TemplateResponse("accuracy.html",{"request":request, "name":selection, "figs": figs})
-    if selection=="Accuracy per User":
-        figs = generateAllLevelsUserAccuracyTables()
-        return templates.TemplateResponse("accuracy.html",{"request":request, "name":selection, "figs":figs})
+    if selection=="User Progress":
+        progresses = getUsersProgresses()
+        return templates.TemplateResponse("progress.html",{"request":request, "name":selection, "progresses":progresses})
 
-def generateAllLevelsAccuracyTables(model: str="", user:str=""):
+def getUsersProgresses():
+    users = []
+    total = cur.execute("select count(*) from images").fetchone()[0]
+    usersValues = {}
+    for item in cur.execute("select username from users where admin=0"):
+        users.append(item[0])
+    for user in users:
+        validated = cur.execute("select count(*) from images where file_name in (select distinct file_name\
+            from validation where username='{user}' and ignored=0)".format(user=user)).fetchone()[0]
+        ignored = cur.execute("select count(*) from images where file_name in (select distinct file_name\
+            from validation where username='{user}' and ignored=1)".format(user=user)).fetchone()[0]
+        usersValues[user] = [validated/total*100, ignored/total*100]
+    return usersValues
+        
+def generateAllLevelsAccuracyTables(model: str=""):
     i = 1
     figs = []
-    fig = generateAccuracyBarChart(str(i), model, user)
+    fig = generateAccuracyBarChart(str(i), model)
     while fig is not None:
         figs.append(fig)
         i+=1
-        fig = generateAccuracyBarChart(str(i), model, user)
+        fig = generateAccuracyBarChart(str(i), model)
     return figs
 
 def generateAllLevelsModelAccuracyTables():
@@ -280,20 +293,9 @@ def generateAllLevelsModelAccuracyTables():
         figsModel = generateAllLevelsAccuracyTables(model=model)
         figs[model] = figsModel
     return figs
-
-def generateAllLevelsUserAccuracyTables():
-    users = "select distinct username from users where username!='admin' and admin==0"
-    figs = {}
-    usersList = []
-    for item in cur.execute(users):
-        usersList.append(item[0])
-    for user in usersList:
-        figsUser = generateAllLevelsAccuracyTables(user=user)
-        figs[user] = figsUser
-    return figs
     
 @app.post("/getFileStatistic")
-def getStatisticFile(request: Request, name: Annotated[str, Form()], option:Annotated[str, Form()]):
+def getStatisticFile(request: Request, name: Annotated[str, Form()], option:Annotated[str, Form()] = ""):
     path = "static/exports/"
     file_name = name
     if (option!=""):
@@ -301,88 +303,111 @@ def getStatisticFile(request: Request, name: Annotated[str, Form()], option:Anno
     file_name += ".xlsx"
     path += file_name
     
-    isModel = (cur.execute("select * from modelOutput where model='{model}'".format(model=option)).fetchone() is not None)
-    isUser = not isModel
-    if not isModel:
-        isUser = (cur.execute("select * from users where username='{user}'".format(user=option)).fetchone() is not None)
-    
+    isModel = option!=""
+        
     with pd.ExcelWriter(path) as writer:
         i=1
         if isModel:
-            df = generateDataFrame(str(i), option)
-        elif isUser:
-            df = generateDataFrame(str(i), user=option)
+            df = generateDataFrameV2(str(i), option)
         else:
-            df = generateDataFrame(str(i))
+            df = generateDataFrameV2(str(i))
         while df is not None:
             df.to_excel(writer, sheet_name="Level "+str(i))
             i+=1
             if isModel:
-                df = generateDataFrame(str(i), option)
-            elif isUser:
-                df = generateDataFrame(str(i), user=option)
+                df = generateDataFrameV2(str(i), option)
             else:
-                df = generateDataFrame(str(i))
+                df = generateDataFrameV2(str(i))
+                
     return FileResponse(path, filename=file_name)
 
-
-def generateDataFrame(level, model:str="", user:str=""):
-    modelGroups = []
-    selectModel = "select modelOutput.level{level}, count(*) from modelOutput, validation where modelOutput.file_name==validation.file_name\
-        and validation.ignored==0 group by modelOutput.level{level}".format(level=level)
-    if (model!=""):
-        selectModel += " and modelOutput.model='{model}'".format(model=model)
-    if (user!=""):
-        selectModel += " and validation.username='{user}'".format(user=user)
-    try:
-        for item in cur.execute(selectModel):
-            modelGroups.append([item[0], item[1]])
-    except:
-        modelGroups = None
-        
-    if modelGroups is not None:
-        modelGroupsDF = pd.DataFrame(modelGroups, columns=["Category", "Total matches"])
-
-        usersGroups = []
-        selectUsers = "select modelOutput.level{level}, count(*) from modelOutput, validation where modelOutput.file_name==validation.file_name\
-            and validation.ignored==0 and validation.level{level}==modelOutput.level{level} group by modelOutput.level{level}".format(level=level)     
-        if (model!=""):
-            selectUsers += " and modelOutput.model='{model}'".format(model=model)
-        if (user!=""):
-            selectUsers += " and validation.username='{user}'".format(user=user)
-        
-        for item in cur.execute(selectUsers):
-            usersGroups.append([item[0], item[1]])
-        
-        usersGroupsDF = pd.DataFrame(usersGroups, columns=["Category", "Coincident matches"])
-
-        finalDF = modelGroupsDF.merge(usersGroupsDF, on="Category", how="left").fillna(0.0)    
-        return finalDF
-    else:
-        return None
-        
-def generateAccuracyBarChart(level, model : str="", user:str=""):
-    df = generateDataFrame(level, model, user)
+def generateDataFrameV2(level, model:str=""):
+    images = []
+    classCounts = {}
+    classCoincidences = {}
+    minimumConsent = cur.execute("select consensus from users where admin=2").fetchone()[0]
+    for img in cur.execute("select * from images"):
+        images.append(img[0])
+    for img in images:
+        usersLabels = {}
+        selectUsersLabels = "select level{level} from validation where file_name='{img}' and ignored==0".format(level= level,img=img)
+        try:
+            for item in cur.execute(selectUsersLabels):
+                if item[0] in usersLabels.keys():
+                    usersLabels[item[0]] += 1
+                else:
+                    usersLabels[item[0]] = 1
+            if len(usersLabels.keys())>0:
+                majorLabel = max(usersLabels, key=usersLabels.get)
+                majorLabelCount = max(usersLabels.values())
+                usersLabels.pop(majorLabel)
+                consent = True
+                if (len(usersLabels)>0):
+                    secondMajorLabelCount = max(usersLabels.values())
+                    consent = majorLabelCount>secondMajorLabelCount
+                
+                consent = consent and (float(majorLabelCount)/(len(usersLabels)+1)*100)>=minimumConsent
+                if consent:
+                    modelLabels = []
+                    selectModelLabels = "select level{level} from modelOutput where file_name='{img}'".format(level=level, img=img)
+                    if model!="":
+                        selectModelLabels += " and model='{model}'".format(model=model)
+                    try:
+                        for item in cur.execute(selectModelLabels):
+                            modelLabels.append(item[0])
+                        
+                        coincidences = modelLabels.count(majorLabel)
+                        if majorLabel in classCounts.keys():
+                            classCounts[majorLabel] += len(modelLabels)
+                        else:
+                            classCounts[majorLabel] = len(modelLabels)
+                        if majorLabel in classCoincidences.keys():
+                            classCoincidences[majorLabel] += coincidences
+                        else:
+                            classCoincidences[majorLabel] = coincidences        
+                    except: 
+                        return None
+        except:
+            return None
+    countsDF = pd.DataFrame(zip(classCounts.keys(), classCounts.values()), columns=["Category", "Labels"])
+    coincidencesDF = pd.DataFrame(zip(classCoincidences.keys(), classCoincidences.values()), columns=["Category", "True Positives"])
+    finalDF = countsDF.merge(coincidencesDF, on="Category", how="left").fillna(0)   
+    return finalDF
+    # print(finalDF)
+  
+def generateAccuracyBarChart(level, model : str=""):
+    df = generateDataFrameV2(level, model)
     if df is None:
         return None
     else:
-        fig = px.histogram(df, x="Category", y=["Total matches", "Coincident matches"], 
+        # print(df)
+        fig = px.histogram(df, x="Category", y=["Labels", "True Positives"], 
                             title="Level "+level, barmode="group")
-        fig = fig.update_layout(yaxis_title="Number of labels", showlegend=False) 
+        fig = fig.update_layout(yaxis_title="Number of labels", showlegend=True) 
+        fig.update_xaxes(tickangle=40)
         return plotly.io.to_html(fig, full_html=False)  
 
-@app.post("/adminsManagement")
-def adminsManagement(request : Request, username:str):
+@app.post("/admin")
+def admin(request : Request, username:str):
+    minimumConsensus = cur.execute("select consensus from users where admin=2").fetchone()[0]
     select = "select * from users where admin=1"
     users = []
     for user in cur.execute(select):
         users.append({"name":user[0], "active":user[2]})
-    return templates.TemplateResponse("adminsManagement.html", {"request":request, "users":users, "username":username})
+    return templates.TemplateResponse("admin.html", {"request":request, "users":users, "username":username, "minimumConsensus":minimumConsensus})
     
-@app.post("/registerAdmin")
-def registerAdmin(request: Request, username : Annotated[str, Form()], password : Annotated[str, Form()], adminUsername:Annotated[str, Form()]):
+@app.post("/registerManager")
+def registerManager(request: Request, username : Annotated[str, Form()], password : Annotated[str, Form()], adminUsername:Annotated[str, Form()]):
     passHash = hashlib.md5(password.encode("utf-8"))
     statement = "insert into users (username, password, active, admin) values (\""+username+"\", \""+passHash.hexdigest()+"\", 1, 1)"
     cur.execute(statement)
     connection.commit()
-    return RedirectResponse(app.url_path_for('adminsManagement')+"?username="+adminUsername)
+    return RedirectResponse(app.url_path_for('admin')+"?username="+adminUsername)
+
+
+@app.post("/saveMinimum")
+def saveMinimum(request: Request, minimum : Annotated[str, Form()], username:Annotated[str, Form()]):
+    print(minimum)
+    cur.execute("update users set consensus="+minimum+" where admin=2")
+    connection.commit()
+    return RedirectResponse(app.url_path_for('admin')+"?username="+username)
