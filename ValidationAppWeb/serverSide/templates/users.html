@@ -10,9 +10,10 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script> -->
     <script>
         $(document).ready(function () {
             $("#newUserButton").click(function (e) {
@@ -130,8 +131,8 @@
         <div class="row">
             <div class="col-2">
                 <form action="/manager?adminUsername={{adminUsername}}" method="post">
-                    <button type="submit" action="/admin"
-                        class="btn btn-outline-secondary">Go Back</button></form>
+                    <button type="submit" action="/admin" class="btn btn-outline-secondary">Go Back</button>
+                </form>
             </div>
             <div class="col-1 col-lg-2"></div>
             <div class="col-6 col-lg-4 text-center" style="margin-bottom: 20px">
@@ -155,7 +156,8 @@
                                 <p class="text-muted" style="margin: auto">{%if user.active == 1%}Enabled{% else
                                     %}Disabled{%endif%}</p>
                                 <a data-toggle="modal" data-target="#changePasswordModal" class="text-muted"
-                                    style="font-size: 12px;" username="{{user.name}}" onclick="saveUsername(event)" id="changePasswordAction">Change Password</a>
+                                    style="font-size: 12px;" username="{{user.name}}" onclick="saveUsername(event)"
+                                    id="changePasswordAction">Change Password</a>
                             </div>
                             <!-- <div class="row"> -->
                             <!-- </div> -->
@@ -192,7 +194,7 @@
             </div>
             <div class="modal-footer row">
                 <form class="col-10" action="/changePassword" method="post" id="changePasswordForm">
-                    <input type="hidden" name="usernameChange" id="usernameChange" value=""> 
+                    <input type="hidden" name="usernameChange" id="usernameChange" value="">
                     <input type="hidden" name="adminUsername" value="{{adminUsername}}" />
                     <label class="form-label">Password</label>
                     <input type="text" class="form-control" style="margin-bottom: 20px;" name="passwordChange"

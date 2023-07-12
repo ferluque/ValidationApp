@@ -7,13 +7,15 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
+        crossorigin="anonymous"></script> -->
+    <script
+        src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
 
     <script>
         function deleteChildren(node) {
@@ -21,7 +23,42 @@
                 node.removeChild(node.firstChild);
             }
         }
-        function inputChanged() {
+        function copyChildren(node1, node2) {
+            deleteChildren(node1);
+            while (node2.hasChildNodes()) {
+                node1.appendChild(node2.removeChild(node2.firstChild));
+            }
+        }
+        function setSelection(node, selection) {
+            deleteChildren(node);
+            var lowLevel;
+            $.ajax({
+                url: "http://127.0.0.1:8000/getCategories?category=" + selection,
+                type: "POST",
+                async: false,
+                success: function (result) {
+                    lowLevel = result["list"];
+                },
+                error: function (error) {
+                    console.log(`Error ${error[0]}`)
+                }
+            })
+            var opt = document.createElement("option");
+            opt.value = "High Detail";
+            opt.innerHTML = "High Detail";
+            node.appendChild(opt);
+            if (lowLevel != undefined) {
+                for (let j = 0; j < lowLevel.length; ++j) {
+                    opt = document.createElement("option");
+                    opt.value = lowLevel[j];
+                    opt.innerHTML = lowLevel[j];
+                    node.appendChild(opt);
+                }
+            }
+            node.style.visibility = "visible";
+        }
+        function inputChanged(e) {
+
             let firstEmpty = 5;
             let lastValue = 1;
             for (let i = 1; i < 5; i++) {
@@ -32,58 +69,58 @@
             }
             console.log("FirstEmpty: " + firstEmpty.toString());
             console.log("lastValue: " + lastValue.toString());
-            if (firstEmpty != (lastValue + 1)) {
-                for (let i = firstEmpty; i < lastValue; i++) {
-                    document.getElementById("combo" + i.toString() + "1").value = document.getElementById("combo" + (i + 1).toString() + "1").value;
-                    document.getElementById("combo" + i.toString() + "2").value = document.getElementById("combo" + (i + 1).toString() + "2").value;
-                }
-                document.getElementById("combo" + lastValue.toString() + "1").value = "Low Detail";
-            }
-            for (let i = lastValue + 1; i < 5; i++) {
-                document.getElementById("label" + i.toString()).style.visibility = "hidden";
-            }
-
-            for (let i = 1; i < 5; i++) {
-                var secondCombo = document.getElementById("combo" + i.toString() + "2");
-                let selection = document.getElementById("combo" + i.toString() + "1").value;
-                var lowLevel;
-                deleteChildren(secondCombo);
+            if (firstEmpty > lastValue) {
+                // Entrada cambiada
+                const selection = e.target.value;
+                var combo2Name = e.target.getAttribute("name");
+                combo2Name = combo2Name.replace(/1$/, "2");
+                const combo2 = document.getElementById(combo2Name);
                 if (selection != "Low Detail") {
-                    $.ajax({
-                        url: "http://127.0.0.1:8000/getCategories?category=" + selection,
-                        type: "POST",
-                        async: false,
-                        success: function (result) {
-                            lowLevel = result["list"];
-                        },
-                        error: function (error) {
-                            console.log(`Error ${error[0]}`)
-                        }
-                    });
-                    var opt = document.createElement("option");
-                    opt.value = "High Detail";
-                    opt.innerHTML = "High Detail";
-                    secondCombo.appendChild(opt);
-                    if (lowLevel != undefined) {
-                        for (let j = 0; j < lowLevel.length; ++j) {
-                            opt = document.createElement("option");
-                            opt.value = lowLevel[j];
-                            opt.innerHTML = lowLevel[j];
-                            secondCombo.appendChild(opt);
-                        }
-                    }
-                    secondCombo.style.visibility = "visible";
+                    setSelection(combo2, selection);
                 }
                 else {
-                    document.getElementById("label" + i.toString()).style.visibility = "visible";
-                    secondCombo.style.visibility = "hidden";
-                    break;
+                    deleteChildren(combo2);
+                    combo2.style.visibility = "hidden";
+                }
+                if (firstEmpty < 5) {
+                    document.getElementById("combo" + firstEmpty + "1").style.visibility = "visible";
+                    document.getElementById("label" + firstEmpty).style.visiblity = "visible";
+                    document.getElementById("label" + firstEmpty).children[0].style.visibility = "visible";
+                }
+                for (let i = firstEmpty + 1; i < 5; i++) {
+                    document.getElementById("combo" + i + "1").style.visibility = "hidden";
+                    document.getElementById("combo" + i + "2").style.visibility = "hidden";
+                    document.getElementById("label" + i).style.visiblity = "hidden";
+                    document.getElementById("label" + i).children[0].style.visibility = "hidden";
                 }
             }
-
-        }    
-        $('.basicAutoSelect').autoComplete();
-
+            else {
+                for (let i = firstEmpty; i < lastValue; ++i) {
+                    console.log("Cambio " + i);
+                    const combo1 = document.getElementById("combo" + i + "1");
+                    const combo2 = document.getElementById("combo" + i + "2");
+                    const nextCombo1 = document.getElementById("combo" + (i + 1) + "1");
+                    const nextCombo2 = document.getElementById("combo" + (i + 1) + "2");
+                    const nextCombo2Value = nextCombo2.value;
+                    combo1.value = nextCombo1.value;
+                    copyChildren(combo2, nextCombo2);
+                    combo2.value = nextCombo2Value;
+                }
+                const combo1 = document.getElementById("combo" + lastValue + "1");
+                const combo2 = document.getElementById("combo" + lastValue + "2");
+                combo1.value = "Low Detail";
+                deleteChildren(combo2);
+                combo2.style.visibility = "hidden";
+                if (lastValue < 4) {
+                    for (let i = lastValue + 1; i < 5; i++) {
+                        document.getElementById("combo" + i + "1").style.visibility = "hidden";
+                        document.getElementById("combo" + i + "2").style.visibility = "hidden";
+                        document.getElementById("label" + i).style.visiblity = "hidden";
+                        document.getElementById("label" + i).children[0].style.visibility = "hidden";
+                    }
+                }
+            }
+        }
     </script>
 </head>
 
@@ -134,11 +171,11 @@
                     <div class="col-6" id="label1">
                         <p style="font-weight: bold; font-size: 25px;">1st Label</p>
                         <select name="combo11" id="combo11" class="form-select" aria-label="Default select example"
-                            style="width: 90%; margin:auto; margin-bottom: 20px" onchange="inputChanged()">
-                        <option selected>Low Detail</option>
-                        {% for option in highLevel.keys() %}
-                        <option value="{{option}}">{{option}}</option>
-                        {% endfor %}
+                            style="width: 90%; margin:auto; margin-bottom: 20px" onchange="inputChanged(event)">
+                            <option selected>Low Detail</option>
+                            {% for option in highLevel.keys() %}
+                            <option value="{{option}}">{{option}}</option>
+                            {% endfor %}
                         </select>
                         <select name="combo12" id="combo12" class="form-select" aria-label="Default select example"
                             style="width: 90%; margin:auto; margin-bottom: 20px; visibility: hidden">
@@ -147,7 +184,7 @@
                     <div class="col-6" id="label2" style="visibility: hidden">
                         <p style="font-weight: bold; font-size: 25px;">2nd Label</p>
                         <select name="combo21" id="combo21" class="form-select" aria-label="Default select example"
-                            style="width: 90%; margin:auto; margin-bottom: 20px" onchange="inputChanged()">
+                            style="width: 90%; margin:auto; margin-bottom: 20px" onchange="inputChanged(event)">
                             <option selected>Low Detail</option>
                             {% for option in highLevel %}
                             <option value="{{option}}">{{option}}</option>
@@ -162,7 +199,7 @@
                     <div class="col-6" id="label3" style="visibility: hidden">
                         <p style="font-weight: bold; font-size: 25px;">3rd Label</p>
                         <select name="combo31" id="combo31" class="form-select" aria-label="Default select example"
-                            style="width: 90%; margin:auto; margin-bottom: 20px" onchange="inputChanged()">
+                            style="width: 90%; margin:auto; margin-bottom: 20px" onchange="inputChanged(event)">
                             <option selected>Low Detail</option>
                             {% for option in highLevel %}
                             <option value="{{option}}">{{option}}</option>
@@ -176,7 +213,7 @@
                     <div class="col-6" id="label4" style="visibility: hidden">
                         <p style="font-weight: bold; font-size: 25px;">4th Label</p>
                         <select name="combo41" id="combo41" class="form-select" aria-label="Default select example"
-                            style="width: 90%; margin:auto; margin-bottom: 20px" onchange="inputChanged()">
+                            style="width: 90%; margin:auto; margin-bottom: 20px" onchange="inputChanged(event)">
                             <option selected>Low Detail</option>
                             {% for option in highLevel %}
                             <option value="{{option}}">{{option}}</option>
